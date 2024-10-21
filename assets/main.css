@@ -1,0 +1,30 @@
+*{
+    font-family: "Roboto", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.pageContainer{
+    width: 100%;
+    max-width: 1600px;
+    padding: 15px 15px 60px 15px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+html{
+
+}
+body{
+
+}
+.btn{
+    margin:10px 10px 10px 0;
+    padding: 5px;
+    font-size: 18px;
+}
+.container{
+    width: 100%;
+    margin: auto;
+    max-width: 960px;
+}
