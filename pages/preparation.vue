@@ -6,7 +6,6 @@ import {preparationGetJson} from "~/src/preparationGetJson";
 import {BASE_COLOR, INPUT_TYPE} from "~/src/constant";
 import BaseButton from "~/src/components/BaseButton.vue";
 import BaseInput from "~/src/components/BaseInput.vue";
-import BaseAudio from "~/src/components/BaseAudio.vue";
 
 const preparation = await preparationGetJson();
 const list = preparation.default;
@@ -21,7 +20,7 @@ const testStatus = ref(false);
 const timeMultiplier = ref(0);
 const audio = ref('')
 
-let asyncModalWithOptions;
+let asyncModalWithOptions:any;
 
 let stop = ref(false)
 

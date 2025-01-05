@@ -6,29 +6,30 @@ import TheIndexTileProjectComponent from "~/src/components/TheIndexTileProjectCo
 import TheRangeSlider from "~/src/components/TheProjectFilter.vue";
 
 const projectList = await projectGetJson();
-let projectListArr = ref(projectList.default.flat());
+const projectListArr = ref(projectList.default);
 const modelValue = ref();
 
 watch(() => modelValue, () => {
-  console.log('projectListArr',projectList.default)
-  projectListArr.value = projectList.default.slice(modelValue.value[0], modelValue.value[1] + 1).flat();
+  projectListArr.value = projectList.default.slice(modelValue.value[0], modelValue.value[1] + 1).flat()
 }, {deep: true});
+const numGenerate = (max:number) => Math.floor(Math.random() * max);
 
 </script>
 
 <template>
   <div class="pageContainer">
-    <BaseH1/>
 
+    <BaseH1/>
 
     <TheRangeSlider
         v-model="modelValue"
     />
+
     <div class="projectList">
         <TheIndexTileProjectComponent
             v-for="item of projectListArr"
-            :key="item.id"
             :projectArr="item"
+            :key="numGenerate(5000)"
         />
     </div>
   </div>

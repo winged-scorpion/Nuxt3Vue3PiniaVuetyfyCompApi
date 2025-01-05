@@ -9,28 +9,35 @@ const props = defineProps({
   }
 });
 const subHead = 'Как проходила работа:';
-const project = (item: any) => {
+const projectArr = (item: any) => {
   return {
-    projectName: item.project,
-    projectDescription: item.project_description,
-    projectLink: item.link,
-    projectStack: item.stack,
-    projectSlider: item.slider,
-    projectTaskList: item.work,
-    darkTime: item.no_info,
-    workflow: item.workflow
+    name: item.name,
+    temp: item.temp,
+    projectList: item.projectList
   }
 }
-const projectOut = project(props.projectArr)
 
+const projectOut = projectArr(props.projectArr)
+const numGenerate = (max:number) => Math.floor(Math.random() * max);
 </script>
 
 <template>
-  <div class="projectBorderWrap">
-    <div class="project">
+
+  <div class="project-wrap">
+    <div class="project-wrap__head">
+      <h3>{{projectOut.name}} - {{projectOut.temp}}</h3>
+    </div>
+
+    <div
+        class="project projectBorderWrap"
+        :class="{dark_time_revert:projectItem.darkTime}"
+        v-for="projectItem of projectOut.projectList"
+        :key="numGenerate(5000)"
+    >
+
       <div class="project__slider">
         <div
-            v-if="projectOut.darkTime"
+            v-if="projectItem.darkTime"
             class="dark_time"
         >
 
@@ -38,50 +45,50 @@ const projectOut = project(props.projectArr)
         <BaseCarousel
             v-else
             :show-arrows="false"
-            :slider-list="projectOut.projectSlider"
+            :slider-list="projectItem.slider"
         />
       </div>
       <div
           class="project__description"
-          :class="{dark_time:projectOut.darkTime}"
+          :class="{dark_time:projectItem.darkTime}"
       >
-        <h2>{{ projectOut.projectName }}</h2>
-        <h4>{{ projectOut.projectDescription }}</h4>
+        <h2>{{ projectItem.project }}</h2>
+        <h4>{{ projectItem.project_description }}</h4>
         <hr>
         <section>
           <div><strong class="subHead">Стек:</strong></div>
           <div class="stag">
-          <span v-for="item of projectOut.projectStack">
+          <span v-for="item of projectItem.stack">
             {{ item }}
           </span>
           </div>
           <hr>
         </section>
         <section
-            v-if="projectOut.projectTaskList.length !== 0"
+            v-if="projectItem.work.length !== 0"
         >
           <div><strong class="subHead">Что было сделано:</strong></div>
           <ol>
-            <li v-for="item of projectOut.projectTaskList">{{ item }}</li>
+            <li v-for="item of projectItem.work">{{ item }}</li>
           </ol>
           <hr>
         </section>
         <section
-            v-if="projectOut.workflow">
+            v-if="projectItem.workflow">
           <BaseDetails
               :header="subHead"
           >
-            {{projectOut.workflow}}
+            {{projectItem.workflow}}
           </BaseDetails>
           <hr>
         </section>
         <div
             class="btn-wrap"
-            v-if="projectOut.projectLink"
+            v-if="projectItem.link"
         >
           <hr>
           <BaseButton
-              :href="projectOut.projectLink"
+              :href="projectItem.link"
           >
             Посетить сайт
           </BaseButton>
@@ -92,10 +99,47 @@ const projectOut = project(props.projectArr)
 </template>
 
 <style scoped lang="scss">
+.project-wrap{
+  position: relative;
+  padding: 10px 0;
+  margin-bottom: 50px;
+  .project{
+    &:last-of-type{
+      margin-bottom: 0;
+    }
+  }
 
+  &:before,&:after{
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    height: 300px;
+    position: absolute;
+    z-index: 1;
+    content: '';
+  }
+  &:before{
+    right: 0;
+    top: 38px;
+    border-right: solid 4px #5f9ea0;
+    border-top: solid 4px #5f9ea0;
+    border-radius: 0 10px 0 0;
+    box-shadow: 5px -5px 5px #5f9ea0;
+  }
+  &:after{
+    left: 0;
+    bottom: 10px;
+    border-left: solid 4px #5f9ea0;
+    border-bottom: solid 34px #5f9ea0;
+    border-radius: 0 0 0 10px;
+    box-shadow: -5px 5px 5px #5f9ea0;
+  }
+  &__head{
+
+  }
+}
 .project {
   display: flex;
-  margin: 5px;
   position: relative;
   z-index: 2;
   background: #fff;
@@ -104,6 +148,13 @@ const projectOut = project(props.projectArr)
   overflow: hidden;
   min-height: 400px;
   border: solid 4px #5f9ea0;
+  margin-bottom: 25px;
+  &.dark_time_revert{
+    flex-direction: row;
+    .project__slider{
+      position: static;
+    }
+  }
   &__slider, &__description {
     width: 50%;
     position: relative;
@@ -159,10 +210,10 @@ const projectOut = project(props.projectArr)
         width: 200px;
         height: 95px;
         bottom: 0;
-        right: 50%;
+        left: 10%;
       }
       &:after{
-        background: url("~/assets/images/saimon/web.png") no-repeat;
+        background: url("~/assets/images/saimon/png-klev-club-p-pautina-png-5.png") no-repeat;
         background-size: contain;
         width: 250px;
         height: 234px;
@@ -175,10 +226,9 @@ const projectOut = project(props.projectArr)
 .projectBorderWrap{
   position: relative;
   overflow: hidden;
-  margin-bottom: 50px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   border-radius: 6px;
 }
 

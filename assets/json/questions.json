@@ -1032,7 +1032,29 @@
       {
         "question": "Можем ли мы в своём компоненте использовать v-model",
         "answer": "да если к примеру в композитион апи кажем definemodel в компоненте, либо через props или emit",
-        "audio": "/vue3New/middleware.wav"
+        "audio": ""
+      }
+    ]
+  },
+  {
+    "tag": "videoList",
+    "name": "Список роликов на просмотр",
+    "show": "notShow",
+    "list": [
+      {
+        "question": "Ролики",
+        "answer": "https://yandex.ru/video/preview/3867868155126460168",
+        "audio": ""
+      },
+      {
+        "question": "подготовка ответы на вопросы",
+        "answer": "https://rutube.ru/video/f9c9771665ca862de2aac5ede284751a/",
+        "audio": ""
+      },
+      {
+        "question": "подготовка ответы на вопросы",
+        "answer": "https://www.youtube.com/watch?v=kYnSZTKL_tY",
+        "audio": ""
       }
     ]
   }
