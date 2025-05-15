@@ -1,36 +1,43 @@
 <script setup lang="ts">
-import {ref, watch} from "vue";
 import BaseH1 from "~/src/components/BaseH1.vue";
-import {projectGetJson} from "~/src/projectGetJson";
 import TheIndexTileProjectComponent from "~/src/components/TheIndexTileProjectComponent.vue";
 import TheRangeSlider from "~/src/components/TheProjectFilter.vue";
+import {useProjectList} from "~/store/projectList";
 
-const projectList = await projectGetJson();
-const projectListArr = ref(projectList.default);
-const modelValue = ref();
+const projectListStore = useProjectList()
+projectListStore.getProjectList()
 
-watch(() => modelValue, () => {
-  projectListArr.value = projectList.default.slice(modelValue.value[0], modelValue.value[1] + 1).flat()
-}, {deep: true});
-const numGenerate = (max:number) => Math.floor(Math.random() * max);
+const projectListArrBase = computed(() => {
+  if (projectListStore.outProduct) {
+    return projectListStore.outProduct
+  }
+  return false
+})
+
+const numGenerate = (max: number) => Math.floor(Math.random() * max);
+
+function updateShowProjectList(item: [number, number]) {
+  projectListStore.getProjectList(item)
+}
 
 </script>
 
 <template>
   <div class="pageContainer">
-
     <BaseH1/>
-
     <TheRangeSlider
-        v-model="modelValue"
+        @updateProjectList="updateShowProjectList"
     />
 
-    <div class="projectList">
-        <TheIndexTileProjectComponent
-            v-for="item of projectListArr"
-            :projectArr="item"
-            :key="numGenerate(5000)"
-        />
+    <div
+        class="projectList"
+    >
+
+      <TheIndexTileProjectComponent
+          v-for="item of projectListArrBase"
+          :projectArr="item"
+          :key="numGenerate(5000)"
+      />
     </div>
   </div>
 </template>
@@ -40,7 +47,8 @@ const numGenerate = (max:number) => Math.floor(Math.random() * max);
     &:nth-child(odd) {
       & > div {
         flex-direction: row-reverse;
-        .btn-wrap{
+
+        .btn-wrap {
           text-align: left;
         }
       }

@@ -5,7 +5,7 @@ import ThePageLoader from "~/src/components/ThePageLoader.vue";
 import hrWelcomeModal from "~/src/components/TheHrWelcomeModal.vue";
 import {initFunction} from "~/src/mountFunction";
 import {onMounted, ref} from "vue";
-import { useHrStore } from "~/store/HrStore";
+import {useHrStore} from "~/store/HrStore";
 
 const hrStore = useHrStore();
 let pageLoader = ref(true)

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, ref, watch, defineAsyncComponent } from "vue";
+import {onMounted, ref, watch, defineAsyncComponent} from "vue";
 import BaseH1 from "~/src/components/BaseH1.vue";
 
 import {preparationGetJson} from "~/src/preparationGetJson";
@@ -20,7 +20,7 @@ const testStatus = ref(false);
 const timeMultiplier = ref(0);
 const audio = ref('')
 
-let asyncModalWithOptions:any;
+let asyncModalWithOptions: any;
 
 let stop = ref(false)
 
@@ -33,13 +33,13 @@ const selectCheck = (item: string) => {
   disableButtonPlay.value = selectFilter.value.length === 0;
 }
 
-let questionSlider:any;
+let questionSlider: any;
 
-const playStop = (event:string) => {
-  if(event === 'play'){
+const playStop = (event: string) => {
+  if (event === 'play') {
     disableButtonPlay.value = true;
     disableButtonStop.value = false;
-  }else{
+  } else {
     disableButtonPlay.value = false;
     disableButtonStop.value = true;
     taskList.value = [];
@@ -51,7 +51,7 @@ const playStop = (event:string) => {
 const nextTask = () => {
   showQuestion.value = taskList.value.shift();
   audio.value = showQuestion.value.audio
-  if(audio.value.length !== 0){
+  if (audio.value.length !== 0) {
     asyncModalWithOptions = defineAsyncComponent({
       loader: () => import('~/src/components/BaseAudio.vue'),
     })
@@ -65,7 +65,7 @@ const speedcal = () => {
   return showIntervalQuestions.value * 60000 * (timeMultiplier.value || 1);
 }
 
-const testStart = (time: number) => {
+const educationStart = (time: number) => {
   playStop('play')
   for (let task of list) {
     selectFilter.value.forEach((item: string) => {
@@ -86,6 +86,7 @@ const testStart = (time: number) => {
       timeMultiplier.value = nextTask();
     }
   }
+
   watch(() => speedcal(), () => {
     clearInterval(questionSlider)
     questionSlider = setInterval(() => {
@@ -110,7 +111,7 @@ const testStart = (time: number) => {
 const nextQuestions = () => {
   progressBarModel.value = 100;
 }
-const testStop = () => {
+const educationStop = () => {
   playStop('stop');
   clearInterval(questionSlider);
 }
@@ -126,15 +127,33 @@ onMounted(() => {
     <BaseH1/>
     <div class="preparation">
       <div class="preparation__list">
-        <label>
-          <span>
-            Интервал между вопросами в минутах,<br> базовый интервал 1 минута
-          </span>
-          <BaseInput
-              v-model="showIntervalQuestions"
-              :inputType="INPUT_TYPE.number"
-          />
-        </label>
+        <div class="preparation__control">
+          <label>
+            <span>
+              Интервал между вопросами в минутах,<br> базовый интервал 1 минута
+            </span>
+            <BaseInput
+                v-model="showIntervalQuestions"
+                :inputType="INPUT_TYPE.number"
+            />
+          </label>
+          <label class="preparation__control-item">
+            <v-checkbox
+                density="compact"
+                hide-details
+                :color="BASE_COLOR"
+            />
+            <span>Перемешать разделы</span>
+          </label>
+          <label class="preparation__control-item">
+            <v-checkbox
+                density="compact"
+                hide-details
+                :color="BASE_COLOR"
+            />
+            <span>Перемешать вопросы</span>
+          </label>
+        </div>
         <div
             v-for="item of list"
         >
@@ -149,14 +168,14 @@ onMounted(() => {
         </div>
         <div>
           <BaseButton
-              @click="testStart(showIntervalQuestions)"
+              @click="educationStart(showIntervalQuestions)"
               :disabled='disableButtonPlay'
               class="button"
           >
             начать
           </BaseButton>
           <BaseButton
-              @click="testStop()"
+              @click="educationStop()"
               :disabled='disableButtonStop'
               class="button"
           >
@@ -218,10 +237,12 @@ onMounted(() => {
     margin: 20px auto;
   }
 }
-.button{
+
+.button {
   width: 100%;
   margin: 15px 0;
 }
+
 .taskItem {
   position: relative;
   z-index: 2;
@@ -240,6 +261,19 @@ onMounted(() => {
 
   &__task {
     width: 80%;
+  }
+
+  &__control {
+    border: solid 4px #5f9ea036;
+    padding: 10px;
+    border-radius: 10px;
+    &-item{
+      display: flex;
+      align-items: center;
+      span{
+        cursor: pointer;
+      }
+    }
   }
 }
 

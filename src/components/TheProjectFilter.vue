@@ -3,7 +3,7 @@ import {ref} from "vue";
 import {projectGetJson} from "~/src/projectGetJson";
 
 const projectList = await projectGetJson();
-let projectListArr = ref(projectList.default.flat());
+let projectListArr = ref(projectList.projectListArr.flat());
 
 const tickLabels = Object.assign({},projectListArr.value.map((el) => el.temp))
 const thumbLabels = projectListArr.value.map((el) => el.name)
@@ -12,10 +12,7 @@ defineProps({
   modelValue: Array
 });
 
-
-
-
-let emit = defineEmits(['update:modelValue']);
+let emit = defineEmits(['update:modelValue','updateProjectList']);
 
 const range = ref([0, thumbLabels.length - 1])
 
@@ -39,7 +36,7 @@ const range = ref([0, thumbLabels.length - 1])
       :step="1"
       min="0"
       v-model="range"
-      @end="emit('update:modelValue', range)"
+      @end="emit('updateProjectList',range)"
   />
 </template>
 

@@ -19,6 +19,9 @@ const projectArr = (item: any) => {
 
 const projectOut = projectArr(props.projectArr)
 const numGenerate = (max:number) => Math.floor(Math.random() * max);
+// watch(() => props.projectArr, () => {
+//   console.log('projectArr',props.projectArr)
+// }, {deep: true});
 </script>
 
 <template>
