@@ -1,3 +1,5 @@
+import type {InputTyp} from "~/model/input";
+
 export const NAV_ITEMS = [
     {
         page: '/',
@@ -46,7 +48,7 @@ export const BACKGROUND_LIST: Object = [
 export const BUTTON_STATUS_BASE: string = 'base'
 export const BUTTON_STATUS_ERROR: string = 'error'
 export const BUTTON_STATUS_SUCCESS: string = 'success'
-export const INPUT_TYPE: Object = {
+export const INPUT_TYPE: InputTyp = {
     text: 'text',
     number: 'number'
 }

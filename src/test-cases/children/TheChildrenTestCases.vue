@@ -7,6 +7,7 @@ import {LOCAL_STORE_NAME} from "./src/constant";
 import BaseButton from "./src/components/BaseButton.vue";
 import TheChildrenItem from "./src/components/TheChildrenItem.vue";
 import BaseInput from "./src/components/BaseInput.vue";
+import {INPUT_TYPE} from "~/src/constant.js";
 
 const varStore = useChildrenVariableStore();
 
@@ -33,13 +34,13 @@ const
 
       <BaseInput
           v-model="childrenName"
-          :input-type="text"
+          :input-type="INPUT_TYPE.text"
           :text="name"
       />
 
       <BaseInput
           v-model="childrenAge"
-          :input-type="number"
+          :input-type="INPUT_TYPE.number"
           :text="age"
       />
       <div class="person-add">
