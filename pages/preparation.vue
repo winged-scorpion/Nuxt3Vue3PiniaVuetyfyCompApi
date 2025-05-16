@@ -76,16 +76,21 @@ const speedcal = () => {
 
 const educationStart = (time: number) => {
   playStop('play')
+  let selectArrayQuestion:Question[][] = []
   for (let task of list) {
     selectFilter.forEach((item) => {
       if (task.tag === item) {
         taskList.value.push(task.list)
+        selectArrayQuestion.push(task.list)
       }
     })
   }
   taskList.value = taskList.value.flat();
+  Object.assign(taskList2,selectArrayQuestion.flat())
+  console.log('task.list1111____________________________',taskList.value)
   testStatus.value = true;
-  taskList.value = taskList.value.sort(() => Math.random() - 0.5);
+  // перемешивание если выбрали
+  // taskList.value = taskList.value.sort(() => Math.random() - 0.5);
   timeMultiplier.value = nextTask();
 
   function questionSliderFunction() {
