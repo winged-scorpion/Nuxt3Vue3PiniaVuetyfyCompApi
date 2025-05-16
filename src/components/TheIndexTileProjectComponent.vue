@@ -33,15 +33,8 @@ const numGenerate = (max: number) => Math.floor(Math.random() * max);
           class="project__slider"
           :class="{'flex-center':projectItem.slider?.length === 1}"
       >
-        <div
-            v-if="projectItem.darkTime"
-            class="dark_time"
-        >
-
-        </div>
-        <span
-            v-else
-        >
+        <div v-if="projectItem.darkTime" class="dark_time"></div>
+        <span v-else>
           <BaseCarousel
               v-if="projectItem.slider !== undefined && projectItem.slider?.length > 1"
               :show-arrows="false"

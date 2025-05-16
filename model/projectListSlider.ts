@@ -5,7 +5,7 @@ export interface ProjectItem {
     project_description?: string,
     stack?: string[],
     work?: string[],
-    slider?: string[],
+    slider: string[],
     workflow?: string,
     link?: string,
     darkTime?: boolean
