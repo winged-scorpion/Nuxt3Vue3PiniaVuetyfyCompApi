@@ -6,12 +6,20 @@ import {preparationGetJson} from "~/src/preparationGetJson";
 import {BASE_COLOR, INPUT_TYPE} from "~/src/constant";
 import BaseButton from "~/src/components/BaseButton.vue";
 import BaseInput from "~/src/components/BaseInput.vue";
+import type {Question} from "~/model/preparation";
 
 const preparation = await preparationGetJson();
 const list = preparation.default;
-const selectFilter = ref([]);
+
+const selectFilter = reactive(<String[]>[])
 const taskList = ref([]);
-const showQuestion = ref([]);
+
+let taskList2 = reactive(<Question[]>[])
+
+const showQuestion = reactive(<Question>{})
+
+
+
 const progressBarModel = ref(0);
 const showIntervalQuestions = ref(1);
 const disableButtonPlay = ref(true);
@@ -25,12 +33,12 @@ let asyncModalWithOptions: any;
 let stop = ref(false)
 
 const selectCheck = (item: string) => {
-  if (selectFilter.value.length === 0 || !selectFilter.value.includes(item)) {
-    selectFilter.value.push(item)
+  if (selectFilter.length === 0 || !selectFilter.includes(item)) {
+    selectFilter.push(item)
   } else {
-    selectFilter.value = selectFilter.value.filter((el) => el !== item)
+    Object.assign(selectFilter.filter((el) => el !== item))
   }
-  disableButtonPlay.value = selectFilter.value.length === 0;
+  disableButtonPlay.value = selectFilter.length === 0;
 }
 
 let questionSlider: any;
@@ -49,17 +57,18 @@ const playStop = (event: string) => {
 }
 
 const nextTask = () => {
-  showQuestion.value = taskList.value.shift();
-  audio.value = showQuestion.value.audio
+  Object.assign(showQuestion,taskList.value.shift())
+  audio.value = showQuestion.audio
   if (audio.value.length !== 0) {
     asyncModalWithOptions = defineAsyncComponent({
       loader: () => import('~/src/components/BaseAudio.vue'),
     })
   }
+
   if (taskList.value.length === 0) {
     stop.value = true;
   }
-  return showQuestion.value.time;
+  return showQuestion.time;
 }
 const speedcal = () => {
   return showIntervalQuestions.value * 60000 * (timeMultiplier.value || 1);
@@ -68,7 +77,7 @@ const speedcal = () => {
 const educationStart = (time: number) => {
   playStop('play')
   for (let task of list) {
-    selectFilter.value.forEach((item: string) => {
+    selectFilter.forEach((item) => {
       if (task.tag === item) {
         taskList.value.push(task.list)
       }
