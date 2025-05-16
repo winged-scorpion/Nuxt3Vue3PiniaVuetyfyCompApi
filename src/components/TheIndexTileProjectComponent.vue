@@ -2,54 +2,58 @@
 import BaseCarousel from "~/src/components/BaseCarousel.vue";
 import BaseButton from "~/src/components/BaseButton.vue";
 import BaseDetails from "~/src/components/BaseDetails.vue";
+import type {ProjectCompanyList} from "~/model/projectListSlider";
 
 const props = defineProps({
   projectArr: {
-    type: Object
+    type: Object as PropType<ProjectCompanyList>,
+    required: true
   }
 });
 const subHead = 'Как проходила работа:';
-const projectArr = (item: any) => {
-  return {
-    name: item.name,
-    temp: item.temp,
-    projectList: item.projectList
-  }
-}
+const numGenerate = (max: number) => Math.floor(Math.random() * max);
 
-const projectOut = projectArr(props.projectArr)
-const numGenerate = (max:number) => Math.floor(Math.random() * max);
-// watch(() => props.projectArr, () => {
-//   console.log('projectArr',props.projectArr)
-// }, {deep: true});
 </script>
 
 <template>
 
   <div class="project-wrap">
     <div class="project-wrap__head">
-      <h3>{{projectOut.name}} - {{projectOut.temp}}</h3>
+      <h3>{{ projectArr?.name }} - {{ projectArr?.temp }}</h3>
     </div>
 
     <div
         class="project projectBorderWrap"
+        v-for="projectItem of projectArr.projectList"
         :class="{dark_time_revert:projectItem.darkTime}"
-        v-for="projectItem of projectOut.projectList"
         :key="numGenerate(5000)"
     >
 
-      <div class="project__slider">
+      <div
+          class="project__slider"
+          :class="{'flex-center':projectItem.slider?.length === 1}"
+      >
         <div
             v-if="projectItem.darkTime"
             class="dark_time"
         >
 
         </div>
-        <BaseCarousel
+        <span
             v-else
-            :show-arrows="false"
-            :slider-list="projectItem.slider"
-        />
+        >
+          <BaseCarousel
+              v-if="projectItem.slider !== undefined && projectItem.slider?.length > 1"
+              :show-arrows="false"
+              :slider-list="projectItem.slider"
+          />
+          <img
+              v-if="projectItem.slider !== undefined && projectItem.slider?.length === 1"
+              :src="projectItem.slider[0]"
+              alt=""
+              class="one-img"
+          >
+        </span>
       </div>
       <div
           class="project__description"
@@ -68,7 +72,7 @@ const numGenerate = (max:number) => Math.floor(Math.random() * max);
           <hr>
         </section>
         <section
-            v-if="projectItem.work.length !== 0"
+            v-if="projectItem.work !== undefined && projectItem.work.length !== 0"
         >
           <div><strong class="subHead">Что было сделано:</strong></div>
           <ol>
@@ -81,7 +85,7 @@ const numGenerate = (max:number) => Math.floor(Math.random() * max);
           <BaseDetails
               :header="subHead"
           >
-            {{projectItem.workflow}}
+            {{ projectItem.workflow }}
           </BaseDetails>
           <hr>
         </section>
@@ -102,17 +106,24 @@ const numGenerate = (max:number) => Math.floor(Math.random() * max);
 </template>
 
 <style scoped lang="scss">
-.project-wrap{
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-wrap {
   position: relative;
   padding: 10px 0;
   margin-bottom: 50px;
-  .project{
-    &:last-of-type{
+
+  .project {
+    &:last-of-type {
       margin-bottom: 0;
     }
   }
 
-  &:before,&:after{
+  &:before, &:after {
     display: block;
     width: 100%;
     max-width: 300px;
@@ -121,7 +132,8 @@ const numGenerate = (max:number) => Math.floor(Math.random() * max);
     z-index: 1;
     content: '';
   }
-  &:before{
+
+  &:before {
     right: 0;
     top: 38px;
     border-right: solid 4px #5f9ea0;
@@ -129,7 +141,8 @@ const numGenerate = (max:number) => Math.floor(Math.random() * max);
     border-radius: 0 10px 0 0;
     box-shadow: 5px -5px 5px #5f9ea0;
   }
-  &:after{
+
+  &:after {
     left: 0;
     bottom: 10px;
     border-left: solid 4px #5f9ea0;
@@ -137,10 +150,12 @@ const numGenerate = (max:number) => Math.floor(Math.random() * max);
     border-radius: 0 0 0 10px;
     box-shadow: -5px 5px 5px #5f9ea0;
   }
-  &__head{
+
+  &__head {
 
   }
 }
+
 .project {
   display: flex;
   position: relative;
@@ -152,26 +167,34 @@ const numGenerate = (max:number) => Math.floor(Math.random() * max);
   min-height: 400px;
   border: solid 4px #5f9ea0;
   margin-bottom: 25px;
-  &.dark_time_revert{
+
+  &.dark_time_revert {
     flex-direction: row;
-    .project__slider{
+
+    .project__slider {
       position: static;
     }
   }
+
   &__slider, &__description {
     width: 50%;
     position: relative;
+    min-height: inherit;
   }
-  &__description{
+
+  &__description {
     padding: 20px;
-    &.dark_time{
-      .details{
+
+    &.dark_time {
+      .details {
         width: 70%;
       }
-      section{
+
+      section {
         position: relative;
-        &:last-of-type{
-          &:after{
+
+        &:last-of-type {
+          &:after {
             display: block;
             content: '';
             background: url("~/assets/images/saimon/not_work.webp") no-repeat;
@@ -186,28 +209,32 @@ const numGenerate = (max:number) => Math.floor(Math.random() * max);
         }
       }
     }
-    section{
-      &:last-of-type{
-        hr{
+
+    section {
+      &:last-of-type {
+        hr {
           display: none;
         }
       }
     }
   }
-  &__slider{
-    .dark_time{
+
+  &__slider {
+    .dark_time {
       position: absolute;
       left: 0;
       top: 0;
       width: 100%;
       height: 100%;
       background: #f3f3f314;
-      &:before,&:after{
+
+      &:before, &:after {
         content: '';
         display: block;
         position: absolute;
       }
-      &:before{
+
+      &:before {
         background: url("~/assets/images/saimon/saimon_sadness.png") no-repeat;
         background-size: contain;
         width: 200px;
@@ -215,7 +242,8 @@ const numGenerate = (max:number) => Math.floor(Math.random() * max);
         bottom: 0;
         left: 10%;
       }
-      &:after{
+
+      &:after {
         background: url("~/assets/images/saimon/png-klev-club-p-pautina-png-5.png") no-repeat;
         background-size: contain;
         width: 250px;
@@ -226,7 +254,8 @@ const numGenerate = (max:number) => Math.floor(Math.random() * max);
     }
   }
 }
-.projectBorderWrap{
+
+.projectBorderWrap {
   position: relative;
   overflow: hidden;
   display: flex;
@@ -235,26 +264,36 @@ const numGenerate = (max:number) => Math.floor(Math.random() * max);
   border-radius: 6px;
 }
 
-.stag{
-  span{
+.stag {
+  span {
     margin: 0 10px 0 0;
-    &:last-of-type{
+
+    &:last-of-type {
       margin-right: 0;
     }
   }
 }
-ol{
+
+ol {
   padding: 0 0 0 30px;
 }
-hr{
+
+hr {
   margin: 5px 0 15px;
   background: #305152;
   border: none;
   height: 1px;
 }
 
-.btn-wrap{
+.btn-wrap {
   text-align: right;
-  .v-btn {}
+
+  .v-btn {
+  }
+}
+
+.one-img {
+  max-width: 100%;
+  object-fit: cover;
 }
 </style>

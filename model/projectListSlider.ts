@@ -8,6 +8,7 @@ export interface ProjectItem {
     slider?: string[],
     workflow?: string,
     link?: string,
+    darkTime?: boolean
 }
 
 export interface ProjectCompanyList {
@@ -15,8 +16,4 @@ export interface ProjectCompanyList {
     temp: string,
     id: number,
     projectList?: ProjectItem[] | null
-}
-
-export interface ProjectList {
-    projectListArr: ProjectCompanyList[]
 }

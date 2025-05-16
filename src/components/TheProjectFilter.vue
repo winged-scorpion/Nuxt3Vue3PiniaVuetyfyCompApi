@@ -1,21 +1,23 @@
 <script setup lang="ts">
-import {ref} from "vue";
+
 import {projectGetJson} from "~/src/projectGetJson";
 
 const projectList = await projectGetJson();
-let projectListArr = ref(projectList.projectListArr.flat());
+let projectListArr = reactive(projectList.projectListArr.flat())
 
-const tickLabels = Object.assign({},projectListArr.value.map((el) => el.temp))
-const thumbLabels = projectListArr.value.map((el) => el.name)
+const tickLabels = Object.assign({}, projectListArr.map((el) => el.temp))
+const thumbLabels = projectListArr.map((el) => el.name)
 
 defineProps({
   modelValue: Array
 });
 
-let emit = defineEmits(['update:modelValue','updateProjectList']);
+let emit = defineEmits(['update:modelValue', 'updateProjectList']);
+const rangeReactive = reactive([0, thumbLabels.length - 1])
 
-const range = ref([0, thumbLabels.length - 1])
-
+function updateRangeSlider(item: [number, number]) {
+  Object.assign(rangeReactive, item)
+}
 </script>
 
 <template>
@@ -35,8 +37,9 @@ const range = ref([0, thumbLabels.length - 1])
       show-ticks="always"
       :step="1"
       min="0"
-      v-model="range"
-      @end="emit('updateProjectList',range)"
+      @update:modelValue="updateRangeSlider"
+      v-model="rangeReactive"
+      @end="emit('updateProjectList',rangeReactive)"
   />
 </template>
 
