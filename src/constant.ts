@@ -4,37 +4,44 @@ export const NAV_ITEMS = [
     {
         page: '/',
         name: 'Главная',
-        h1: 'Учебный проект'
+        h1: 'Учебный проект',
+        visibility: true
     },
     {
         page: '/js_ts_task',
         name: 'Решебник',
-        h1: 'js ts задачи из лайвкодинга'
+        h1: 'js ts задачи из лайвкодинга',
+        visibility: true
     },
     {
         page: '/preparation',
         name: 'Подготовка',
-        h1: 'Подготовка к собеседованию'
+        h1: 'Подготовка к собеседованию',
+        visibility: true
     },
     {
         page: '/training',
         name: 'Базовые задачи',
-        h1: 'Базовые задачи по разному функционалу'
+        h1: 'Базовые задачи по разному функционалу',
+        visibility: true
     },
     {
         page: '/itKitchen',
         name: 'IT кухня',
-        h1: 'Видео сборник разных рецептов'
+        h1: 'Видео сборник разных рецептов',
+        visibility: true
     },
     {
         page: '/test_cases',
         name: 'Тестовые задачи',
-        h1: 'Задачи По Vue3 из различных собеседований'
+        h1: 'Задачи По Vue3 из различных собеседований',
+        visibility: false
     },
     {
         page: '/wiki',
         name: 'Wiki',
-        h1: 'Моя Wiki по js'
+        h1: 'Моя Wiki по js',
+        visibility: true
     }
 ]
 export const nameLocalStoreSetUser = 'user';

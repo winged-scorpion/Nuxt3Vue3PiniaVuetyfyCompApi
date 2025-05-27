@@ -8,6 +8,7 @@ import {NAV_ITEMS} from "~/src/constant";
   <nav>
     <NuxtLink
         v-for="item of NAV_ITEMS"
+        v-show="item?.visibility"
         :to=item.page
         :key="item.page"
     >{{ item.name }}

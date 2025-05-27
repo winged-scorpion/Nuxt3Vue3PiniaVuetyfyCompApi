@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, ref, watch, defineAsyncComponent} from "vue";
+import {ref, watch, defineAsyncComponent} from "vue";
 import BaseH1 from "~/src/components/BaseH1.vue";
 
 import {preparationGetJson} from "~/src/preparationGetJson";
@@ -11,14 +11,13 @@ import type {Question} from "~/model/preparation";
 const preparation = await preparationGetJson();
 const list = preparation.default;
 
-const selectFilter = reactive(<String[]>[])
-const taskList = ref([]);
+const selectFilter = reactive(<String[]>[]);
 
-let taskList2 = reactive(<Question[]>[])
+const taskList = reactive(<Question[]>[]);
 
-const showQuestion = reactive(<Question>{})
+const showQuestion = reactive(<Question>{});
 
-
+const selectArrayQuestion2 = reactive(<Question[][]>[]);
 
 const progressBarModel = ref(0);
 const showIntervalQuestions = ref(1);
@@ -27,18 +26,36 @@ const disableButtonStop = ref(true);
 const testStatus = ref(false);
 const timeMultiplier = ref(0);
 const audio = ref('')
+const mixTopics = ref(false)
+const mixQuestions = ref(false)
 
 let asyncModalWithOptions: any;
 
-let stop = ref(false)
+let stop = ref(false);
 
 const selectCheck = (item: string) => {
   if (selectFilter.length === 0 || !selectFilter.includes(item)) {
     selectFilter.push(item)
   } else {
-    Object.assign(selectFilter.filter((el) => el !== item))
+    selectFilter.forEach((elDelete,index)=>{
+      if(elDelete === item){
+        selectFilter.splice(index,1)
+      }
+    })
   }
   disableButtonPlay.value = selectFilter.length === 0;
+
+  let selectArrayQuestion: Question[][] = []
+  for (let task of list) {
+    selectFilter.forEach((item) => {
+      if (task.tag === item) {
+        selectArrayQuestion.push(task.list)
+      }else{
+
+      }
+    })
+  }
+  Object.assign(taskList, selectArrayQuestion)
 }
 
 let questionSlider: any;
@@ -50,14 +67,14 @@ const playStop = (event: string) => {
   } else {
     disableButtonPlay.value = false;
     disableButtonStop.value = true;
-    taskList.value = [];
+    taskList.length = 0
     testStatus.value = false;
     progressBarModel.value = 0;
   }
 }
 
 const nextTask = () => {
-  Object.assign(showQuestion,taskList.value.shift())
+  Object.assign(showQuestion, taskList.shift())
   audio.value = showQuestion.audio
   if (audio.value.length !== 0) {
     asyncModalWithOptions = defineAsyncComponent({
@@ -65,63 +82,68 @@ const nextTask = () => {
     })
   }
 
-  if (taskList.value.length === 0) {
-    stop.value = true;
-  }
+  if (taskList.length === 0) stop.value = true;
   return showQuestion.time;
 }
-const speedcal = () => {
+
+function questionInterval() {
   return showIntervalQuestions.value * 60000 * (timeMultiplier.value || 1);
 }
 
-const educationStart = (time: number) => {
-  playStop('play')
-  let selectArrayQuestion:Question[][] = []
-  for (let task of list) {
-    selectFilter.forEach((item) => {
-      if (task.tag === item) {
-        taskList.value.push(task.list)
-        selectArrayQuestion.push(task.list)
-      }
-    })
+function questionRandom(item:boolean) {
+  console.log('questionRandom')
+
+  //Object.assign(taskList.sort(() => Math.random() - 0.5))
+}
+function topicsRandom (item:boolean) {
+  if(item){
+    console.log('if_______________topicsRandom',taskList.sort(() => Math.random() - 0.5))
+  }else{
+    console.log('else_______________topicsRandom',taskList)
   }
-  taskList.value = taskList.value.flat();
-  Object.assign(taskList2,selectArrayQuestion.flat())
-  console.log('task.list1111____________________________',taskList.value)
+}
+
+function topicsList (){
+
+}
+
+function educationStart() {
+  playStop('play')
+  Object.assign(taskList,taskList.flat())
+
   testStatus.value = true;
-  // перемешивание если выбрали
-  // taskList.value = taskList.value.sort(() => Math.random() - 0.5);
-  timeMultiplier.value = nextTask();
+  timeMultiplier.value = <number>nextTask();
 
   function questionSliderFunction() {
     progressBarModel.value = ++progressBarModel.value;
     if (progressBarModel.value >= 100) {
       progressBarModel.value = 0
-      timeMultiplier.value = nextTask();
+      timeMultiplier.value = <number>nextTask();
     }
   }
 
-  watch(() => speedcal(), () => {
+  watch(() => questionInterval(), () => {
     clearInterval(questionSlider)
     questionSlider = setInterval(() => {
       questionSliderFunction();
-    }, speedcal() / 100);
+    }, questionInterval() / 100);
   }, {deep: true});
 
 
   questionSlider = setInterval(() => {
     questionSliderFunction();
-  }, speedcal() / 100);
+  }, questionInterval() / 100);
 
   watch(() => stop.value, () => {
     if (stop.value) {
       setTimeout(() => {
         clearInterval(questionSlider)
-      }, speedcal());
+      }, questionInterval());
     }
   }, {deep: true});
 
 }
+
 const nextQuestions = () => {
   progressBarModel.value = 100;
 }
@@ -129,11 +151,6 @@ const educationStop = () => {
   playStop('stop');
   clearInterval(questionSlider);
 }
-
-
-onMounted(() => {
-
-})
 
 </script>
 <template>
@@ -156,16 +173,18 @@ onMounted(() => {
                 density="compact"
                 hide-details
                 :color="BASE_COLOR"
+                @click="topicsRandom(mixTopics = !mixTopics)"
             />
-            <span>Перемешать разделы</span>
+            <span>Перемешать темы</span>
           </label>
           <label class="preparation__control-item">
             <v-checkbox
                 density="compact"
                 hide-details
                 :color="BASE_COLOR"
+                @click="questionRandom(mixQuestions = !mixQuestions)"
             />
-            <span>Перемешать вопросы</span>
+            <span>Перемешать вопросы в темах</span>
           </label>
         </div>
         <div
@@ -182,7 +201,7 @@ onMounted(() => {
         </div>
         <div>
           <BaseButton
-              @click="educationStart(showIntervalQuestions)"
+              @click="educationStart()"
               :disabled='disableButtonPlay'
               class="button"
           >
@@ -281,10 +300,12 @@ onMounted(() => {
     border: solid 4px #5f9ea036;
     padding: 10px;
     border-radius: 10px;
-    &-item{
+
+    &-item {
       display: flex;
       align-items: center;
-      span{
+
+      span {
         cursor: pointer;
       }
     }
