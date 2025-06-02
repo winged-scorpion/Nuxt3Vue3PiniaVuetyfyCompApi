@@ -8,6 +8,8 @@ import BaseButton from "~/src/components/BaseButton.vue";
 import BaseInput from "~/src/components/BaseInput.vue";
 import type {Question} from "~/model/preparation";
 
+import {Shuffle} from "~/composables/randomKeysArray";
+
 const preparation = await preparationGetJson();
 const list = preparation.default;
 
@@ -15,18 +17,18 @@ const selectFilter = reactive(<String[]>[]);
 
 const taskList = reactive(<Question[]>[]);
 
-const showQuestion = reactive(<Question>{});
+const outTaskList = reactive(<Question[]>[]);
 
-const selectArrayQuestion2 = reactive(<Question[][]>[]);
+const showQuestion = reactive(<Question>{});
 
 const progressBarModel = ref(0);
 const showIntervalQuestions = ref(1);
-const disableButtonPlay = ref(true);
-const disableButtonStop = ref(true);
+const viewingDisableButton = ref(true);
 const testStatus = ref(false);
 const timeMultiplier = ref(0);
 const audio = ref('')
 const mixTopics = ref(false)
+const viewing = ref(true)
 const mixQuestions = ref(false)
 
 let asyncModalWithOptions: any;
@@ -37,20 +39,20 @@ const selectCheck = (item: string) => {
   if (selectFilter.length === 0 || !selectFilter.includes(item)) {
     selectFilter.push(item)
   } else {
-    selectFilter.forEach((elDelete,index)=>{
-      if(elDelete === item){
-        selectFilter.splice(index,1)
+    selectFilter.forEach((elDelete, index) => {
+      if (elDelete === item) {
+        selectFilter.splice(index, 1)
       }
     })
   }
-  disableButtonPlay.value = selectFilter.length === 0;
+  viewingDisableButton.value = selectFilter.length === 0;
 
   let selectArrayQuestion: Question[][] = []
   for (let task of list) {
     selectFilter.forEach((item) => {
       if (task.tag === item) {
         selectArrayQuestion.push(task.list)
-      }else{
+      } else {
 
       }
     })
@@ -60,21 +62,16 @@ const selectCheck = (item: string) => {
 
 let questionSlider: any;
 
-const playStop = (event: string) => {
-  if (event === 'play') {
-    disableButtonPlay.value = true;
-    disableButtonStop.value = false;
+const playStop = (event: Boolean) => {
+  if (event) {
+    clearInterval(questionSlider);
   } else {
-    disableButtonPlay.value = false;
-    disableButtonStop.value = true;
-    taskList.length = 0
-    testStatus.value = false;
-    progressBarModel.value = 0;
+    viewingDisableButton.value = false;
   }
 }
 
 const nextTask = () => {
-  Object.assign(showQuestion, taskList.shift())
+  Object.assign(showQuestion, outTaskList.shift())
   audio.value = showQuestion.audio
   if (audio.value.length !== 0) {
     asyncModalWithOptions = defineAsyncComponent({
@@ -90,26 +87,35 @@ function questionInterval() {
   return showIntervalQuestions.value * 60000 * (timeMultiplier.value || 1);
 }
 
-function questionRandom(item:boolean) {
+function questionRandom(item: boolean) {
   console.log('questionRandom')
 
   //Object.assign(taskList.sort(() => Math.random() - 0.5))
 }
-function topicsRandom (item:boolean) {
-  if(item){
-    console.log('if_______________topicsRandom',taskList.sort(() => Math.random() - 0.5))
-  }else{
-    console.log('else_______________topicsRandom',taskList)
+
+function shuffleTopics(item: boolean) {
+  if (item) {
+    Object.assign(outTaskList, Shuffle(taskList.slice()))
+  } else {
+    outTaskList.length = 0
+    Object.assign(outTaskList, taskList)
   }
 }
 
-function topicsList (){
+function topicsList() {
 
 }
 
-function educationStart() {
-  playStop('play')
-  Object.assign(taskList,taskList.flat())
+function viewingSlider(event:Boolean) {
+
+  playStop(event)
+  if(event){
+    return false
+  }else{
+    if(!mixTopics.value) Object.assign(outTaskList, taskList.flat())
+  }
+
+  Object.assign(outTaskList, outTaskList.flat())
 
   testStatus.value = true;
   timeMultiplier.value = <number>nextTask();
@@ -147,9 +153,13 @@ function educationStart() {
 const nextQuestions = () => {
   progressBarModel.value = 100;
 }
-const educationStop = () => {
-  playStop('stop');
-  clearInterval(questionSlider);
+function educationStop() {
+  // selectFilter.length = 0;
+  // selectCheck('')
+  viewingDisableButton.value = true;
+  taskList.length = 0
+  testStatus.value = false;
+  progressBarModel.value = 0;
 }
 
 </script>
@@ -173,7 +183,7 @@ const educationStop = () => {
                 density="compact"
                 hide-details
                 :color="BASE_COLOR"
-                @click="topicsRandom(mixTopics = !mixTopics)"
+                @click="shuffleTopics(mixTopics = !mixTopics)"
             />
             <span>Перемешать темы</span>
           </label>
@@ -199,26 +209,28 @@ const educationStop = () => {
               @change="selectCheck(item.tag)"
           />
         </div>
-        <div>
+        <div class="preparation__nav">
           <BaseButton
-              @click="educationStart()"
-              :disabled='disableButtonPlay'
+              @click="viewingSlider(viewing = !viewing)"
+              :disabled='viewingDisableButton'
               class="button"
           >
-            начать
+            <span v-if="viewing">Старт</span>
+            <span v-else>Пауза</span>
           </BaseButton>
           <BaseButton
-              @click="educationStop()"
-              :disabled='disableButtonStop'
+              @click="educationStop"
+              :disabled='viewingDisableButton'
               class="button"
           >
-            Остановить
+           Сброс
           </BaseButton>
+
         </div>
       </div>
       <div class="preparation__task">
         <div class="card-task__wrap">
-          <div v-if="testStatus">Осталось вопросов {{ taskList.length }}</div>
+          <div v-if="testStatus">Осталось вопросов {{ outTaskList.length }}</div>
           <div
               v-if="testStatus"
               class="card-task">
@@ -317,6 +329,23 @@ const educationStop = () => {
   left: 0;
   margin: 0 0 0;
   border-radius: 10px 10px 0 0;
+}
+
+.preparation__nav {
+  position: fixed;
+  bottom: 100px;
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+  left: 0;
+  right: 0;
+  margin: auto;
+  gap: 20px;
+
+  button {
+    width: 200px;
+    margin: 0;
+  }
 }
 
 </style>
