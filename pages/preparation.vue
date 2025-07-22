@@ -26,14 +26,17 @@ const showIntervalQuestions = ref(1);
 const viewingDisableButton = ref(true);
 const testStatus = ref(false);
 const timeMultiplier = ref(0);
-const audio = ref('')
-const mixTopics = ref(false)
-const viewing = ref(true)
-const mixQuestions = ref(false)
+const audio = ref('');
+const mixTopics = ref(false);
+const viewing = ref(true);
+const mixQuestions = ref(false);
+const checked = ref(false);
+const pause = ref(false)
+const stop = ref(false);
+const randomGroup = ref(false)
 
+let questionSlider: any;
 let asyncModalWithOptions: any;
-
-let stop = ref(false);
 
 const selectCheck = (item: string) => {
   if (selectFilter.length === 0 || !selectFilter.includes(item)) {
@@ -58,13 +61,13 @@ const selectCheck = (item: string) => {
     })
   }
   Object.assign(taskList, selectArrayQuestion)
+  mapGroupTask()
 }
-
-let questionSlider: any;
 
 const playStop = (event: Boolean) => {
   if (event) {
     clearInterval(questionSlider);
+    pause.value = true;
   } else {
     viewingDisableButton.value = false;
   }
@@ -93,28 +96,36 @@ function questionRandom(item: boolean) {
   //Object.assign(taskList.sort(() => Math.random() - 0.5))
 }
 
-function shuffleTopics(item: boolean) {
-  if (item) {
-    Object.assign(outTaskList, Shuffle(taskList.slice()))
-  } else {
+function mapGroupTask() {
+  if (!randomGroup.value) {
     outTaskList.length = 0
     Object.assign(outTaskList, taskList)
+  } else {
+    Object.assign(outTaskList, Shuffle(taskList.slice()))
   }
 }
 
-function topicsList() {
-
+function randomGroupTask(item: boolean) {
+  randomGroup.value = item
+  mapGroupTask()
 }
 
-function viewingSlider(event:Boolean) {
-
+function viewingSlider(event: Boolean) {
   playStop(event)
-  if(event){
+  if (event) {
     return false
-  }else{
-    if(!mixTopics.value) Object.assign(outTaskList, taskList.flat())
+  } else {
+    if (!mixTopics.value) Object.assign(outTaskList, taskList.flat())
   }
+  if (pause.value) {
+    console.log('stop  ----> start')
 
+  } else {
+    playSlider()
+  }
+}
+
+function playSlider() {
   Object.assign(outTaskList, outTaskList.flat())
 
   testStatus.value = true;
@@ -147,19 +158,20 @@ function viewingSlider(event:Boolean) {
       }, questionInterval());
     }
   }, {deep: true});
-
 }
 
 const nextQuestions = () => {
   progressBarModel.value = 100;
 }
+
 function educationStop() {
-  // selectFilter.length = 0;
-  // selectCheck('')
+  selectFilter.length = 0;
   viewingDisableButton.value = true;
   taskList.length = 0
+  viewing.value = true
   testStatus.value = false;
   progressBarModel.value = 0;
+  checked.value = false
 }
 
 </script>
@@ -183,7 +195,7 @@ function educationStop() {
                 density="compact"
                 hide-details
                 :color="BASE_COLOR"
-                @click="shuffleTopics(mixTopics = !mixTopics)"
+                @click="randomGroupTask(mixTopics = !mixTopics)"
             />
             <span>Перемешать темы</span>
           </label>
@@ -206,7 +218,9 @@ function educationStop() {
               :color="BASE_COLOR"
               :value="item.tag"
               :label="item.name"
+              v-model="checked"
               @change="selectCheck(item.tag)"
+              multiple
           />
         </div>
         <div class="preparation__nav">
@@ -223,9 +237,8 @@ function educationStop() {
               :disabled='viewingDisableButton'
               class="button"
           >
-           Сброс
+            Сброс
           </BaseButton>
-
         </div>
       </div>
       <div class="preparation__task">
