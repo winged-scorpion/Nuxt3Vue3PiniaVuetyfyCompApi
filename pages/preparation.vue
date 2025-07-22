@@ -34,7 +34,6 @@ const checked = ref(false);
 const pause = ref(false)
 const stop = ref(false);
 const randomGroup = ref(false)
-
 let questionSlider: any;
 let asyncModalWithOptions: any;
 
@@ -90,11 +89,7 @@ function questionInterval() {
   return showIntervalQuestions.value * 60000 * (timeMultiplier.value || 1);
 }
 
-function questionRandom(item: boolean) {
-  console.log('questionRandom')
-
-  //Object.assign(taskList.sort(() => Math.random() - 0.5))
-}
+function questionRandom(item: boolean) {}
 
 function mapGroupTask() {
   if (!randomGroup.value) {
@@ -117,16 +112,26 @@ function viewingSlider(event: Boolean) {
   } else {
     if (!mixTopics.value) Object.assign(outTaskList, taskList.flat())
   }
-  if (pause.value) {
-    console.log('stop  ----> start')
-
-  } else {
-    playSlider()
-  }
+  // if (pause.value) {
+  //   console.log('stop  ----> start',progressBarModel.value)
+  //
+  // } else {
+  //   playSlider(pause.value)
+  // }
+  playSlider(pause.value)
 }
 
-function playSlider() {
-  Object.assign(outTaskList, outTaskList.flat())
+function playSlider(pause:boolean) {
+  console.log('pause',pause)
+  if(!pause){
+    //Object.assign(outTaskList, outTaskList.flat())
+    console.log('1111')
+  }else{
+    console.log('2222')
+  }
+
+
+
 
   testStatus.value = true;
   timeMultiplier.value = <number>nextTask();
