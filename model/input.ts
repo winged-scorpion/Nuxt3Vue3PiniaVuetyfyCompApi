@@ -1,4 +1,4 @@
-export interface InputTyp{
+export interface InputTyp {
     text: string,
     number: string
 }

@@ -32,12 +32,6 @@ export const NAV_ITEMS = [
         visibility: true
     },
     {
-        page: '/test_cases',
-        name: 'Тестовые задачи',
-        h1: 'Задачи По Vue3 из различных собеседований',
-        visibility: false
-    },
-    {
         page: '/wiki',
         name: 'Wiki',
         h1: 'Моя Wiki по js',

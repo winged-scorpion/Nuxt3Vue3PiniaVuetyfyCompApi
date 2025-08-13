@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import Navigation from "~/src/components/TheNavigation.vue";
+import Navigation from "~/components/TheNavigation.vue";
 
 </script>
 

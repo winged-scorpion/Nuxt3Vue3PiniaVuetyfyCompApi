@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BaseH1 from "~/src/components/BaseH1.vue";
+import BaseH1 from "~/components/base/BaseH1.vue";
 </script>
 <template>
   <div class="pageContainer">

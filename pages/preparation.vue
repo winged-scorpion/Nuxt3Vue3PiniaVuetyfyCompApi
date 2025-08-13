@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import {ref, watch, defineAsyncComponent} from "vue";
-import BaseH1 from "~/src/components/BaseH1.vue";
+import BaseH1 from "~/components/base/BaseH1.vue";
 
 import {preparationGetJson} from "~/src/preparationGetJson";
 import {BASE_COLOR, INPUT_TYPE} from "~/src/constant";
-import BaseButton from "~/src/components/BaseButton.vue";
-import BaseInput from "~/src/components/BaseInput.vue";
+import BaseButton from "~/components/base/BaseButton.vue";
+import BaseInput from "~/components/base/BaseInput.vue";
 import type {Question} from "~/model/preparation";
 
 import {Shuffle} from "~/composables/randomKeysArray";
@@ -77,7 +77,7 @@ const nextTask = () => {
   audio.value = showQuestion.audio
   if (audio.value.length !== 0) {
     asyncModalWithOptions = defineAsyncComponent({
-      loader: () => import('~/src/components/BaseAudio.vue'),
+      loader: () => import('~/components/base/BaseAudio.vue'),
     })
   }
 

@@ -1,12 +1,20 @@
 <script setup lang="ts">
 import {ref} from "vue";
+import type {SchemaItem} from "~/model/schema";
+import {defineProps} from "vue";
 
 const props = defineProps({
   inputType: {
-    type: String
+    type: String,
+    required: false
   },
   value: {
-    type: String
+    type: String,
+    required: false
+  },
+  schema:{
+    type: Object as PropType<SchemaItem>,
+    required: false
   }
 });
 let value = ref()
@@ -34,7 +42,8 @@ let value = ref()
       class="pa-0 ma-0"
       :width="150"
       :type=props.inputType
-      :placeholder="props.value"
+      :placeholder="schema?.placeholder"
+      label="Label"
   />
 </template>
 

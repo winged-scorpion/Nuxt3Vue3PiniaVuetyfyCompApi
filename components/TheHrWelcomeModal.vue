@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import BaseInput from "~/src/components/BaseInput.vue";
+import BaseInput from "~/components/base/BaseInput.vue";
 import {useHrStore} from "~/store/HrStore";
 import {localStoreSet} from "~/src/storageFunction";
 

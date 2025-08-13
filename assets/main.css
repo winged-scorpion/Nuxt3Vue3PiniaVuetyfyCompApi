@@ -28,3 +28,35 @@ body{
     margin: auto;
     max-width: 960px;
 }
+
+.baseInput{
+    margin: 0 0 15px 0;
+    /*width: 20%;*/
+    /*max-width: 250px;*/
+    .v-field__field{
+        border-bottom: solid 1px #000;
+        border-left: solid 1px #000;
+        text-indent: 10px;
+    }
+    .v-field-label{
+        text-indent: 10px;
+    }
+    .v-field-label--floating{
+        text-indent: 7px;
+    }
+}
+.base-form-input{
+    input{
+        border-bottom: solid 1px #000;
+        border-left: solid 1px #000;
+        text-indent: 10px;
+        outline: none;
+    }
+    label{
+        font-size: 12px;
+    }
+    .base-form-input__error{
+        color: red;
+        font-size: 12px;
+    }
+}

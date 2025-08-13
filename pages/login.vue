@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {definePageMeta} from "#imports";
-import BaseForm from "~/src/components/BaseForm.vue";
+import BaseForm from "~/components/base/BaseForm.vue";
 
 definePageMeta({
   middleware: "protected-auth-form"

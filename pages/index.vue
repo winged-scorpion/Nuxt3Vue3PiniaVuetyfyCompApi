@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import BaseH1 from "~/src/components/BaseH1.vue";
-import TheIndexTileProjectComponent from "~/src/components/TheIndexTileProjectComponent.vue";
-import TheRangeSlider from "~/src/components/TheProjectFilter.vue";
+import BaseH1 from "~/components/base/BaseH1.vue";
+import TheIndexTileProjectComponent from "~/components/TheIndexTileProjectComponent.vue";
+import TheRangeSlider from "~/components/TheProjectFilter.vue";
 import {useProjectList} from "~/store/projectList";
 
 const projectListStore = useProjectList()

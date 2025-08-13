@@ -1,1 +1,0 @@
-export const LOCAL_STORE_NAME:string = 'children'

@@ -3,10 +3,10 @@ import {randomBackground} from '~/src/functions';
 import {getLiveTaskJson} from "~/src/liveTaskGetJson";
 import {ref} from "vue";
 import MasonryWall from '@yeger/vue-masonry-wall';
-import TaskTileComponent from "~/src/components/TaskTilePreComponent.vue";
-import TheTileModalContentComponent from "~/src/components/TheTileModalContentComponent.vue";
-import BaseH1 from "~/src/components/BaseH1.vue";
-import BaseCarousel from "~/src/components/BaseCarousel.vue";
+import TaskTileComponent from "~/components/TaskTilePreComponent.vue";
+import TheTileModalContentComponent from "~/components/TheTileModalContentComponent.vue";
+import BaseH1 from "~/components/base/BaseH1.vue";
+import BaseCarousel from "~/components/base/BaseCarousel.vue";
 
 
 const taskCode = ref(),

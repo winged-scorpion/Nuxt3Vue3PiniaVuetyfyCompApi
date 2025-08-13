@@ -2,9 +2,8 @@
 import {authorizationRequest} from "~/src/userAuthorizationRequest";
 import {schemaVeeValidate} from "~/src/formValidate";
 import {ref} from "vue";
-import BaseButton from "~/src/components/BaseButton.vue";
+import BaseButton from "~/components/base/BaseButton.vue";
 import {Form, Field, ErrorMessage} from "vee-validate";
-import TheLoader from "~/src/components/TheLoader.vue";
 import {useUserStore} from "~/store/UserStore";
 
 const userStore = useUserStore();
@@ -24,6 +23,7 @@ const
       v-slot="{ errors }"
       :class="{'no-login': userStore.authSend}"
   >
+<!--    <TheLoader/>-->
     <TheLoader/>
     <div
         :class="{'no-login__text': userStore.authSend}"

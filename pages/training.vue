@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import BaseH1 from "~/src/components/BaseH1.vue";
-import TheAddition from "~/src/components/TheAddition.vue";
-import TheMultiplication from "~/src/components/TheMultiplication.vue";
+import BaseH1 from "~/components/base/BaseH1.vue";
+import TheAddition from "~/components/TheAddition.vue";
+import TheMultiplication from "~/components/TheMultiplication.vue";
+import TheTrainingFormVeeValidate from "~/components/form/TheTrainingFormVeeValidate.vue";
 </script>
 
 <template>
@@ -14,7 +15,7 @@ import TheMultiplication from "~/src/components/TheMultiplication.vue";
       <TheMultiplication/>
     </div>
     <div>
-      <h3>Таймер</h3>
+      <TheTrainingFormVeeValidate/>
     </div>
   </div>
 </template>

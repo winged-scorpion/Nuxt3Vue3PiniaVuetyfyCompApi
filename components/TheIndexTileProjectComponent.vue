@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import BaseCarousel from "~/src/components/BaseCarousel.vue";
-import BaseButton from "~/src/components/BaseButton.vue";
-import BaseDetails from "~/src/components/BaseDetails.vue";
+import BaseCarousel from "~/components/base/BaseCarousel.vue";
+import BaseButton from "~/components/base/BaseButton.vue";
+import BaseDetails from "~/components/base/BaseDetails.vue";
 import type {ProjectCompanyList} from "~/model/projectListSlider";
 
 const props = defineProps({

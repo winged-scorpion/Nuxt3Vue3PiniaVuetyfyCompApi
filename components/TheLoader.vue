@@ -17,6 +17,7 @@ const variableStore = useVariableStore();
   right: 0;
   width: 200px;
   z-index: 0;
+
   background: url("~/assets/images/loader.gif") no-repeat center;
   height: 28px;
   background-size: 100%;

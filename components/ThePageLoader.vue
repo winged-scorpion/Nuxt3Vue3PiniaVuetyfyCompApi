@@ -1,8 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+</script>
 
 <template>
   <div class="shadow">
-    <img src="../../assets/images/loaderPage.gif">
+    <img src="~/assets/images/loaderPage.gif">
   </div>
 </template>
 
