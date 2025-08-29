@@ -1,6 +1,6 @@
 export interface InputList {
     inputId: number,
-    value: string
+    valueIn: string
 }
 
 export interface InputHidden {

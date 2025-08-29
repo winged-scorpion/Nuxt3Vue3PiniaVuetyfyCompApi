@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import {ref, onMounted, type PropType} from "vue";
-import {defineEmits} from 'vue'
+import { type PropType} from "vue";
 import type {SchemaItem} from "~/model/schema";
 import {defineProps} from "vue";
 import type {InputHidden} from "~/model/inputList";
@@ -24,9 +23,6 @@ const props = defineProps({
     required: false
   }
 });
-
-let value = ref()
-
 </script>
 
 <template>
@@ -40,7 +36,7 @@ let value = ref()
           v-if="inputType === 'number'"
           :name=schema?.name
           :type=inputType
-          v-model.number="value"
+          v-model.number="props.value"
           @input="$emit('update:model-value', $event.target.value)"
       />
       <Field
@@ -48,6 +44,7 @@ let value = ref()
           :name=schema?.name
           :type=inputType
           :placeholder=schema?.placeholder
+          v-model="props.value"
           @input="$emit('update:model-value', $event.target.value)"
       />
     </div>

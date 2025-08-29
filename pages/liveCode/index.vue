@@ -17,7 +17,6 @@ const taskCode = ref(),
       taskTitle.value = taskList.default[taskId][0]
     }
 
-
 </script>
 <template>
   <div class="pageContainer">
@@ -33,7 +32,7 @@ const taskCode = ref(),
                 class="tile pa-2"
                 v-bind="activatorProps"
                 :key="index"
-                :tile-text="item[0]"
+                :tile-text="String(item[0])"
                 :styleBackground=randomBackground()
             />
           </template>

@@ -2,14 +2,14 @@
 
 const props = defineProps({
   tileText: {
-    type: String
+    type: String,
+    required: true
   },
   styleBackground: {
     type: Array as PropType<string[]>,
     required: true
   }
 });
-
 </script>
 
 <template>

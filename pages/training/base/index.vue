@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import BaseH1 from "~/components/base/BaseH1.vue";
+
 import TheAddition from "~/components/TheAddition.vue";
 import TheMultiplication from "~/components/TheMultiplication.vue";
-import TheTrainingFormVeeValidate from "~/components/form/TheTrainingFormVeeValidate.vue";
+import TheTrainingFormVeeValidate from "~/components/base/BaseVeeValidate.vue";
 </script>
 
 <template>
   <div class="pageContainer">
-    <BaseH1/>
+    <h2>Тренировка Разному функционалу</h2>
     <div>
       <TheAddition/>
     </div>
@@ -18,9 +18,9 @@ import TheTrainingFormVeeValidate from "~/components/form/TheTrainingFormVeeVali
       <TheTrainingFormVeeValidate/>
     </div>
   </div>
+
 </template>
 
-
-<style scoped>
+<style scoped lang="scss">
 
 </style>

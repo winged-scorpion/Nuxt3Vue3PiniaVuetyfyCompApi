@@ -8,7 +8,7 @@ export const NAV_ITEMS = [
         visibility: true
     },
     {
-        page: '/js_ts_task',
+        page: '/liveCode',
         name: 'Решебник',
         h1: 'js ts задачи из лайвкодинга',
         visibility: true

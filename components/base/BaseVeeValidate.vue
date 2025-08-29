@@ -1,11 +1,13 @@
 <script setup lang="ts">
-
+import * as yup from "yup"
+import {ref} from "vue";
 import {Form as VeeForm} from 'vee-validate'
 import {string} from 'yup';
 
 import BaseInput from "~/components/base/BaseInput.vue";
 import {INPUT_TYPE} from "~/src/constant";
 import type {InputList} from "~/model/inputList";
+import {fieldId} from "~/src/functions";
 
 const schema = {
   firstName: {
@@ -50,8 +52,25 @@ const schema = {
     classStyle: 'baseInput'
   }
 }
-import * as yup from "yup"
-import {ref} from "vue";
+
+function dynamicSchema(id: number) {
+  return {
+    as: 'moreInput' + id,
+    placeholder: 'Сообщение',
+    name: 'moreInput' + id,
+    type: 'text',
+    label: 'Короткое сообщение ' + id,
+    classStyle: 'baseInput'
+  }
+}
+
+
+let hiddenButton = {
+  show: true,
+  value: 'скрыть'
+}
+
+let hideField = ref(false);
 
 const validationSchema = computed(() => {
   let schema = {
@@ -59,7 +78,15 @@ const validationSchema = computed(() => {
     lastName: hideField.value ? yup.string() : yup.string().required('Фамилия обязательна к заполнению'),
     email: string().required('Укажите ваш емаил').email('Проверьте корректность введенного email'),
     password: string().required('Укажите пароль').min(1, 'Пароль слишком короткий').max(10, 'Пароль слишком длинный'),
-    secondName: string().nullable().notRequired()
+    secondName: string().nullable().notRequired(),
+    moreInput: yup
+        .array()
+        .of(
+            yup.object().shape({
+              valueIn: yup.string().required('Заполните').min(1,'заполните'),
+            })
+        )
+        .strict()
   };
   return yup.object(schema);
 });
@@ -78,25 +105,14 @@ function dopField() {
   let randomFieldId = fieldId(0, 100)
   formData.moreInput.push({
     inputId: randomFieldId,
-    value: ''
+    valueIn: ''
   })
+  console.log('validationSchema',validationSchema.value)
 }
 
-function fieldId(min: number, max: number) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1) + min);
+function fieldDelete(fieldIndex: number) {
+  formData.moreInput.splice(fieldIndex, 1)
 }
-
-function fieldDelete(fieldId: number) {
-  formData.moreInput = formData.moreInput.filter(x => x.inputId !== fieldId)
-}
-
-let hiddenButton = {
-  show: true,
-  value: 'скрыть'
-}
-let hideField = ref(false);
 
 </script>
 
@@ -126,8 +142,6 @@ let hideField = ref(false);
         >{{ hiddenButton.value }}
         </base-button>
       </div>
-
-
       <BaseInput
           v-model="formData.secondName"
           :schema="schema.secondName"
@@ -155,12 +169,19 @@ let hideField = ref(false);
           <div>
             {{ index }}
           </div>
-          <input type="text" :value="item.value">
+          <BaseInput
+              :inputType="INPUT_TYPE.text"
+              :value="item.valueIn"
+              :schema="dynamicSchema(index)"
+              v-model="formData.moreInput[index].valueIn"
+          />
+
           <base-button
-              @click.prevent="fieldDelete(item.inputId)"
+              @click.prevent="fieldDelete(index)"
               class="form__fieldDelete"
           >delete {{ item.inputId }}
           </base-button>
+          {{ item.valueIn }}
         </div>
       </div>
       <div class="form__field">
@@ -172,7 +193,7 @@ let hideField = ref(false);
 
       <div class="form__field">
         <base-button :disabled="!meta.valid" type="submit">{{ meta.valid }}</base-button>
-        <base-button @click="showFormData" type="submit">Проверка валидаций</base-button>
+        <base-button @click="console.log('showFormData--------------->', formData)" type="submit">Проверка валидаций</base-button>
       </div>
     </form>
   </VeeForm>
