@@ -9,16 +9,16 @@ const path = computed(() => route.path)
 
 import BaseH1 from "~/components/base/BaseH1.vue";
 import TheTab from "~/components/base/BaseTab.vue";
-import TheTrainingFunction from "~/components/trainingComponents/TheTrainingBase.vue";
-import TheTrainingApi from "~/components/trainingComponents/TheTrainingApi.vue";
-import TheTrainingNav from "~/components/trainingComponents/TheTrainingNav.vue";
+import TheTrainingFunction from "~/pages/training/base/index.vue";
+import TheTrainingApi from "~/pages/training/api/index.vue";
+import TheTrainingForm from "~/pages/training/formValidate/index.vue";
 import {computed} from "vue";
 
 
 const activeTab = ref('base')
 const tabs = [
   {tab: 'base', label: 'Базовый функционал', selected: true},
-  {tab: 'nav', label: 'Навигация'},
+  {tab: 'form', label: 'Валидация форм'},
   {tab: 'api', label: 'Api'}
 ]
 function activeTabUpdate(tab:string){
@@ -29,12 +29,6 @@ const tabNav = [
   {
     page: path.value+`/base`,
     name: 'Базовый функционал',
-    h1: 'Видео сборник разных рецептов',
-    visibility: true
-  },
-  {
-    page: path.value+`/nav`,
-    name: 'Навигация',
     h1: 'Видео сборник разных рецептов',
     visibility: true
   },
@@ -76,8 +70,8 @@ const tabNav = [
       <TheTrainingApi
           v-if="activeTab === 'api'"
       />
-      <TheTrainingNav
-          v-if="activeTab === 'nav'"
+      <TheTrainingForm
+          v-if="activeTab === 'form'"
       />
       <div>
 

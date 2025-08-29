@@ -14,8 +14,10 @@ export default defineNuxtConfig({
         transpile: ["vuetify"],
     },
     plugins: [
-        { src: '~/src/plugins/vuetify' },
-        { src: '~/src/plugins/vue-masonry-wall' }
+        {src: '~/src/plugins/vuetify'},
+        {src: '~/src/plugins/vue-masonry-wall'},
+        {src: '~/src/plugins/VVideo'},
+
     ],
     devServer: {
         host: 'https://localhost:8000/'

@@ -2,7 +2,7 @@
 
 import TheAddition from "~/components/TheAddition.vue";
 import TheMultiplication from "~/components/TheMultiplication.vue";
-import TheTrainingFormVeeValidate from "~/components/base/BaseVeeValidate.vue";
+
 </script>
 
 <template>
@@ -14,9 +14,7 @@ import TheTrainingFormVeeValidate from "~/components/base/BaseVeeValidate.vue";
     <div>
       <TheMultiplication/>
     </div>
-    <div>
-      <TheTrainingFormVeeValidate/>
-    </div>
+
   </div>
 
 </template>

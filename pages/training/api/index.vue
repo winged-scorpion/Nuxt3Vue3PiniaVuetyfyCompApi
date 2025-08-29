@@ -3,8 +3,9 @@
 </script>
 
 <template>
-  <h2>Тренировка в работе с Api</h2>
-
+  <div class="pageContainer">
+    <h2>Тренировка в работе с Api</h2>
+  </div>
 </template>
 
 <style scoped lang="scss">
