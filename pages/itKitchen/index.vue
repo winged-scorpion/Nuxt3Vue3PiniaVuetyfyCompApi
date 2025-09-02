@@ -3,15 +3,46 @@
 import BaseH1 from "~/components/base/BaseH1.vue";
 
 const videoList = [
-  {id: 1, description: 'кратко по терминологий', link: 'https://www.youtube.com/watch?v=gV6eobXisYU', img:'https://jsek.work/vt-sunflowers.jpg'},
-  {id: 2, description: 'event-loop', link: 'https://www.youtube.com/watch?v=377qAu37OTE', img:'https://jsek.work/vt-sunflowers.jpg'},
-  {id: 3, description: 'собеседование на junior хорошее по скриптам', link: 'https://www.youtube.com/watch?v=ScRTey_dvhI', img:'https://jsek.work/vt-sunflowers.jpg'},
-  {id: 4, description: 'по вью', link: 'https://www.youtube.com/watch?v=IeZt4h0w0Kg&t=7519s', img:'https://jsek.work/vt-sunflowers.jpg'},
-  {id: 5, description: '16 вопросов по js', link: 'https://www.youtube.com/watch?v=3kLS5UPvfss', img:'https://jsek.work/vt-sunflowers.jpg'}
+  {
+    id: 1,
+    description: 'кратко по терминологий',
+    link: 'https://www.youtube.com/watch?v=gV6eobXisYU',
+    img: 'https://jsek.work/vt-sunflowers.jpg'
+  },
+  {
+    id: 2,
+    description: 'event-loop',
+    link: 'https://www.youtube.com/watch?v=377qAu37OTE',
+    img: 'https://jsek.work/vt-sunflowers.jpg'
+  },
+  {
+    id: 3,
+    description: 'собеседование на junior хорошее по скриптам',
+    link: 'https://www.youtube.com/watch?v=ScRTey_dvhI',
+    img: 'https://jsek.work/vt-sunflowers.jpg'
+  },
+  {
+    id: 4,
+    description: 'по вью',
+    link: 'https://www.youtube.com/watch?v=IeZt4h0w0Kg&t=7519s',
+    img: 'https://jsek.work/vt-sunflowers.jpg'
+  },
+  {
+    id: 5,
+    description: '16 вопросов по js',
+    link: 'https://www.youtube.com/watch?v=3kLS5UPvfss',
+    img: 'https://jsek.work/vt-sunflowers.jpg'
+  },
+  {
+    id: 6,
+    description: "важное по резюме",
+    link: "https://www.youtube.com/watch?v=_ytszV4ItAg&ab_channel=СаняобIT",
+    img: 'https://jsek.work/vt-sunflowers.jpg'
+  }
 ]
 
-function openVideo(id:number) {
-  console.log('id-------------------------------',id)
+function openVideo(id: number) {
+  console.log('id-------------------------------', id)
 }
 
 </script>
@@ -32,12 +63,12 @@ function openVideo(id:number) {
             :src="item.img"
             :alt="item.description"
         >
-<!--        <v-video-->
-<!--            aspect-ratio="16/9"-->
-<!--            preload="metadata"-->
-<!--            :image="item.img"-->
-<!--            :src="item.link"-->
-<!--        />-->
+        <!--        <v-video-->
+        <!--            aspect-ratio="16/9"-->
+        <!--            preload="metadata"-->
+        <!--            :image="item.img"-->
+        <!--            :src="item.link"-->
+        <!--        />-->
         <div class="player__description">{{ item.description }}</div>
       </div>
     </div>
@@ -46,7 +77,7 @@ function openVideo(id:number) {
 </template>
 
 <style scoped lang="scss">
-
+@import "assets/variables";
 
 .videoItem {
   border: solid 2px #000;
@@ -72,13 +103,14 @@ function openVideo(id:number) {
 }
 
 .player {
-  &-wrap{
+  &-wrap {
     margin: 25px 0;
     display: flex;
     flex-wrap: wrap;
     width: 100%;
     gap: 2%
   }
+
   &__body {
     width: 32%;
     height: 200px;
@@ -93,7 +125,8 @@ function openVideo(id:number) {
     border-radius: 40px 0 0 0;
     position: relative;
     overflow: hidden;
-    &:before{
+
+    &:before {
       content: '';
       display: block;
       width: 40px;
@@ -105,13 +138,16 @@ function openVideo(id:number) {
       border-radius: 40px 0 0 0;
       z-index: 2;
     }
-    &:hover{
+
+    &:hover {
       background: rgb(95 158 160);
-      i{
+
+      i {
         opacity: 1;
       }
     }
-    img{
+
+    img {
       position: absolute;
       z-index: 1;
       width: 100%;
@@ -121,7 +157,7 @@ function openVideo(id:number) {
     }
   }
 
-  &__play{
+  &__play {
     z-index: 4;
     font-size: 85px;
     color: red;
@@ -136,10 +172,10 @@ function openVideo(id:number) {
 
   &__description {
     padding: 10px 0 0 10px;
-    text-shadow: 1px 1px #5f9ea0;
     font-size: 20px;
     position: relative;
     z-index: 3;
+    text-shadow: $shadow;
   }
 }
 

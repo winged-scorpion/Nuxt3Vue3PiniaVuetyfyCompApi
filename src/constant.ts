@@ -14,7 +14,7 @@ export const NAV_ITEMS = [
         visibility: true
     },
     {
-        page: '/preparation',
+        page: '/interview',
         name: 'Подготовка',
         h1: 'Подготовка к собеседованию',
         visibility: true
