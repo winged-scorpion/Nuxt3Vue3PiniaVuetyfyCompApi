@@ -14,8 +14,9 @@ export function h1Search(url: string) {
         }
     }
 }
-
+let test = 0
 export function randomBackground() {
+    // console.log('randomBackground------------------->',test++)
     function invertHex(hex: string) {
         return '#' + (Number(`0x1${hex}`) ^ 0xFFFFFF).toString(16).substr(1).toUpperCase();
     }

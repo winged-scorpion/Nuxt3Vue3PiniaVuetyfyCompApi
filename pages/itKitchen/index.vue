@@ -58,18 +58,29 @@ function openVideo(id: number) {
           v-for="item in videoList"
           @click="openVideo(item.id)"
       >
-        <v-icon class="player__play">mdi-play-box</v-icon>
-        <img
-            :src="item.img"
-            :alt="item.description"
+        <v-dialog
+            width="fit-content"
         >
-        <!--        <v-video-->
-        <!--            aspect-ratio="16/9"-->
-        <!--            preload="metadata"-->
-        <!--            :image="item.img"-->
-        <!--            :src="item.link"-->
-        <!--        />-->
-        <div class="player__description">{{ item.description }}</div>
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-icon class="player__play">mdi-play-box</v-icon>
+            <img
+                :src="item.img"
+                :alt="item.description"
+            >
+
+            <div class="player__description">{{ item.description }}</div>
+          </template>
+          <template v-slot:default="{ isActive }">
+            <v-video
+                aspect-ratio="16/9"
+                preload="metadata"
+                :image="item.img"
+                :src="item.link"
+            />
+          </template>
+        </v-dialog>
+
+
       </div>
     </div>
 
@@ -77,7 +88,7 @@ function openVideo(id: number) {
 </template>
 
 <style scoped lang="scss">
-@import "assets/variables";
+@use "assets/variables" as *;
 
 .videoItem {
   border: solid 2px #000;

@@ -15,7 +15,7 @@ const props = defineProps({
 </template>
 
 <style scoped lang="scss">
-@import "assets/animateList";
+@use "assets/animateList" as *;
 button{
   border: solid 1px #000;
 }

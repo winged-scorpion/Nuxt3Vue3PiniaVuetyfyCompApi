@@ -18,5 +18,5 @@ import Navigation from "~/components/TheNavigation.vue";
 </template>
 
 <style scoped lang="scss">
-@import "assets/animateList";
+@use "assets/animateList" as *;
 </style>

@@ -1,14 +1,15 @@
 <script setup lang="ts">
 
+import {watch} from "vue";
+
 const props = defineProps({
   codeTitle: {
-    type: String
+    type: String,
+    required: false
   },
   codeTask: {
-    type: String
-  },
-  padding: {
-    type: Boolean
+    type: String,
+    required: false
   }
 });
 
@@ -22,18 +23,6 @@ const props = defineProps({
     <v-card-text>
       <pre>{{ props.codeTask }}</pre>
     </v-card-text>
-    <div
-        v-if="props.padding"
-        class="pb-13"
-    ></div>
-    <v-btn
-        class="position-absolute top-0 right-0"
-        height="50px"
-        width="50px"
-        text="&#x2716;"
-        density="compact"
-        @click="$emit('closed')"
-    ></v-btn>
   </v-card>
 </template>
 

@@ -7,7 +7,13 @@ export default defineConfig({
         // ... Specify options here.
     },
     plugins: [
-        vue(),
+        vue({
+            template: {
+                compilerOptions: {
+                    isCustomElement: (tag:any) => ['ErrorMessage','Field','v-btn'].includes(tag),
+                }
+            }
+        }),
         vueJsx({
             include: ['src/**/*.jsx'],
             exclude: ['src/**/*.jsx']

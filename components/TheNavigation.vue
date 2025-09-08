@@ -28,7 +28,7 @@ const path = computed(() => route.path)
 
 
 <style scoped lang="scss">
-@import "assets/variables";
+@use "assets/variables" as *;
 a {
   text-decoration: none;
   font-size: 16px;

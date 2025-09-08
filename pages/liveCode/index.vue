@@ -4,58 +4,43 @@ import {getLiveTaskJson} from "~/src/liveTaskGetJson";
 import {ref} from "vue";
 import MasonryWall from '@yeger/vue-masonry-wall';
 import TaskTileComponent from "~/components/TaskTilePreComponent.vue";
-import TheTileModalContentComponent from "~/components/TheTileModalContentComponent.vue";
 import BaseH1 from "~/components/base/BaseH1.vue";
-import BaseCarousel from "~/components/base/BaseCarousel.vue";
 
+const
+    modalVisible = ref(false),
+    taskList = await getLiveTaskJson()
+const taskListArr = reactive({
+  taskCode: [] as string[],
+  taskHead: ''
+})
 
-const taskCode = ref(),
-    taskTitle = ref(),
-    taskList = await getLiveTaskJson(),
-    searchTask = (taskId: number) => {
-      taskCode.value = taskList.default[taskId][1]
-      taskTitle.value = taskList.default[taskId][0]
-    }
-
+function openDialog(taskId: number) {
+  taskListArr.taskCode = taskList.default[taskId][1];
+  taskListArr.taskHead = String(taskList.default[taskId][0]);
+  modalVisible.value = true;
+}
 </script>
 <template>
   <div class="pageContainer">
     <BaseH1/>
-    <v-dialog
-        width="fit-content"
-    >
-      <template v-slot:activator="{ props: activatorProps }">
-        <masonry-wall :items="taskList.default" :ssr-columns="1" :column-width="300" :gap="16">
-          <template #default="{ item, index }">
-            <TaskTileComponent
-                @mouseover="searchTask(index)"
-                class="tile pa-2"
-                v-bind="activatorProps"
-                :key="index"
-                :tile-text="String(item[0])"
-                :styleBackground=randomBackground()
-            />
-          </template>
-        </masonry-wall>
+    <masonry-wall :items="taskList.default" :ssr-columns="1" :column-width="300" :gap="16">
+      <template #default="{ item, index }">
+        <TaskTileComponent
+            @click="openDialog(index)"
+            class="tile pa-2"
+            :key="index"
+            :tile-text="String(item[0])"
+            :styleBackground=randomBackground()
+        />
       </template>
-      <template v-slot:default="{ isActive }">
-        <BaseCarousel
-            :show-arrows="false"
-            height="auto"
-            :slider-list="taskCode"
-        >
-          <template v-slot:default="slotProps">
-            <TheTileModalContentComponent
-                :code-task="slotProps.multiple"
-                :code-title="taskTitle"
-                :padding="true"
-                @closed.once="isActive.value = false"
-            />
-          </template>
-        </BaseCarousel>
-      </template>
-    </v-dialog>
+    </masonry-wall>
   </div>
+  <BaseDialog
+      :task=taskListArr
+      :type-content="'livecode'"
+      :visible=modalVisible
+      @closed="modalVisible = false"
+  />
 </template>
 
 <style lang="scss">

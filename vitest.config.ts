@@ -5,7 +5,13 @@ import { fileURLToPath } from 'node:url'
 import { resolve, dirname } from 'node:path'
 
 export default defineConfig({
-    plugins: [vue()],
+    plugins: [vue({
+        template: {
+            compilerOptions: {
+                isCustomElement: (tag:any) => ['ErrorMessage','Field','v-btn'].includes(tag),
+            }
+        }
+    })],
     test: {
         environment: 'jsdom',
         exclude: [
