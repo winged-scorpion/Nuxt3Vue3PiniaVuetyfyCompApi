@@ -15,6 +15,9 @@ const props = defineProps({
   },
   sliderImg: {
     type: Boolean
+  },
+  update: {
+    type: Boolean
   }
 });
 
@@ -27,7 +30,10 @@ const validateBackground = (str: string) => {
   })
   return link;
 }
-
+const taskListStatus = ref(false);
+watch(() => props, () => {
+  taskListStatus.value = props.taskList !== undefined;
+}, {deep: true});
 </script>
 <template>
   <v-carousel
@@ -44,17 +50,15 @@ const validateBackground = (str: string) => {
     </v-carousel-item>
   </v-carousel>
   <v-carousel
-      cover
-      cycle
-      v-if="props.taskList !== undefined"
-      :show-arrows="props.taskList.taskCode && props.taskList.taskCode?.length > 1"
-      :class="{'__noPagination':props.taskList.taskCode?.length === 1}"
+      v-if="taskListStatus"
+      height="auto"
+      :show-arrows="props.taskList?.taskCode && props.taskList.taskCode.length > 1"
+      :class="{'__noPagination':props.taskList?.taskCode?.length === 1}"
   >
     <v-carousel-item
-        v-for="(item,i) of props.taskList.taskCode"
+        v-for="(item,i) of props.taskList?.taskCode"
         :key="i"
         class="projectSlider"
-
     >
       <TheTileModalContentComponent
           :code-task="item"
@@ -65,10 +69,14 @@ const validateBackground = (str: string) => {
 
 </template>
 
-<style scoped lang="scss"></style>
+
 <style lang="scss">
 .v-btn--active {
   background: rgb(95, 158, 160);
+}
+
+.v-carousel-item {
+  padding-bottom: 50px;
 }
 
 .__noPagination {

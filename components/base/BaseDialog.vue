@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type {ModalContentLiveCode} from "~/model/modal";
-import {type PropType, ref, watch} from "vue";
+import {type PropType} from "vue";
 import BaseCarousel from "~/components/base/BaseCarousel.vue";
-import TheTileModalContentComponent from "~/components/TheTileModalContentComponent.vue";
+
 
 const props = defineProps({
   task: {
@@ -18,6 +18,7 @@ const props = defineProps({
     required: true
   }
 })
+
 </script>
 
 <template>
@@ -31,6 +32,7 @@ const props = defineProps({
             :show-arrows="false"
             height="auto"
             :task-list="task"
+            :update="visible"
         />
       </div>
       <div v-if="typeContent === 'video'">
@@ -58,6 +60,7 @@ const props = defineProps({
   display: none;
   justify-content: center;
   align-items: center;
+
   &__body{
     position: relative;
     width: 50%;

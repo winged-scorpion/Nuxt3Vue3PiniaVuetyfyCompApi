@@ -19,6 +19,7 @@ function openDialog(taskId: number) {
   taskListArr.taskHead = String(taskList.default[taskId][0]);
   modalVisible.value = true;
 }
+
 </script>
 <template>
   <div class="pageContainer">
