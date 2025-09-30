@@ -178,6 +178,13 @@ function educationStop() {
   progressBarModel.value = 0;
   checked.value = false
 }
+const schema = {
+  interval: {
+    as: 'interval',
+    name: 'interval'
+  }
+}
+
 
 </script>
 <template>
@@ -192,6 +199,7 @@ function educationStop() {
             </span>
             <BaseInput
                 v-model="showIntervalQuestions"
+                :schema="schema.interval"
                 :inputType="INPUT_TYPE.number"
             />
           </label>
@@ -275,10 +283,7 @@ function educationStop() {
             >
               Далее
             </BaseButton>
-
-
           </div>
-
         </div>
       </div>
     </div>

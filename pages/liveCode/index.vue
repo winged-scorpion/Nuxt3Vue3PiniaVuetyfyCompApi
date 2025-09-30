@@ -38,7 +38,7 @@ function openDialog(taskId: number) {
   </div>
   <BaseDialog
       :task=taskListArr
-      :type-content="'livecode'"
+      :type-content="'video'"
       :visible=modalVisible
       @closed="modalVisible = false"
   />

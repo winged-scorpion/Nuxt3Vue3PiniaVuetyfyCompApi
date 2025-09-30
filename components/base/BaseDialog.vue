@@ -18,7 +18,7 @@ const props = defineProps({
     required: true
   }
 })
-
+let test = 'www.youtube.com/watch?v=3bGNuRtlqAQ'
 </script>
 
 <template>
@@ -36,7 +36,10 @@ const props = defineProps({
         />
       </div>
       <div v-if="typeContent === 'video'">
-        видео
+        <BaseVideo
+            :link=task.video
+            :name="task.taskHead"
+        />
       </div>
       <v-btn
           text="&#x2716;"
@@ -64,6 +67,7 @@ const props = defineProps({
   &__body{
     position: relative;
     width: 50%;
+    background: #fff;
   }
   button{
     width: 50px;
@@ -76,6 +80,13 @@ const props = defineProps({
 }
 .show{
   display: flex;
+}
+
+.x-video{
+  background: red;
+  width: 500px;
+  height: 500px;
+
 }
 
 </style>

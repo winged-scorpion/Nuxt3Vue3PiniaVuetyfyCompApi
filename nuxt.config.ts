@@ -15,9 +15,7 @@ export default defineNuxtConfig({
     },
     plugins: [
         {src: '~/src/plugins/vuetify'},
-        {src: '~/src/plugins/vue-masonry-wall'},
-        {src: '~/src/plugins/VVideo'},
-
+        {src: '~/src/plugins/vue-masonry-wall'}
     ],
     devServer: {
         host: 'https://localhost:8000/'

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 
 import BaseH1 from "~/components/base/BaseH1.vue";
+import {ref} from "vue";
+import {string} from "yup";
 
 const videoList = [
   {
@@ -40,10 +42,18 @@ const videoList = [
     img: 'https://jsek.work/vt-sunflowers.jpg'
   }
 ]
-
+const showVideo = reactive({
+  taskHead:<string> '',
+  video:<string> ''
+})
 function openVideo(id: number) {
-  console.log('id-------------------------------', id)
+  let itemVideo = videoList.find(item => item.id === id)
+  showVideo.video = itemVideo.link
+  showVideo.taskHead = itemVideo.description
+
+  modalVisible.value = true
 }
+const modalVisible = ref(false)
 
 </script>
 
@@ -58,33 +68,21 @@ function openVideo(id: number) {
           v-for="item in videoList"
           @click="openVideo(item.id)"
       >
-        <v-dialog
-            width="fit-content"
+        <v-icon class="player__play">mdi-play-box</v-icon>
+        <img
+            :src="item.img"
+            :alt="item.description"
         >
-          <template v-slot:activator="{ props: activatorProps }">
-            <v-icon class="player__play">mdi-play-box</v-icon>
-            <img
-                :src="item.img"
-                :alt="item.description"
-            >
-
-            <div class="player__description">{{ item.description }}</div>
-          </template>
-          <template v-slot:default="{ isActive }">
-            <v-video
-                aspect-ratio="16/9"
-                preload="metadata"
-                :image="item.img"
-                :src="item.link"
-            />
-          </template>
-        </v-dialog>
-
-
+        <div class="player__description">{{ item.description }}</div>
       </div>
     </div>
-
   </div>
+  <BaseDialog
+      :task=showVideo
+      :type-content="'video'"
+      :visible=modalVisible
+      @closed="modalVisible = false"
+  />
 </template>
 
 <style scoped lang="scss">
