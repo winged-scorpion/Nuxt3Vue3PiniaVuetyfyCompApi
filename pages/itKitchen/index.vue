@@ -2,7 +2,6 @@
 
 import BaseH1 from "~/components/base/BaseH1.vue";
 import {ref} from "vue";
-import {string} from "yup";
 
 const videoList = [
   {
