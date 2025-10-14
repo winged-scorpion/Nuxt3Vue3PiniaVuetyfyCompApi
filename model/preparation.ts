@@ -5,3 +5,11 @@ export interface Question {
     time?: number
 }
 
+
+export interface QuestionFull {
+    tag: string,
+    name: string,
+    list: Question[]
+}
+
+

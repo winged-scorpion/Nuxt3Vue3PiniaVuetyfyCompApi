@@ -89,7 +89,8 @@ function questionInterval() {
   return showIntervalQuestions.value * 60000 * (timeMultiplier.value || 1);
 }
 
-function questionRandom(item: boolean) {}
+function questionRandom(item: boolean) {
+}
 
 function mapGroupTask() {
   if (!randomGroup.value) {
@@ -107,6 +108,7 @@ function randomGroupTask(item: boolean) {
 
 function viewingSlider(event: Boolean) {
   playStop(event)
+  console.log('start-----------> viewingSlider')
   if (event) {
     return false
   } else {
@@ -121,16 +123,14 @@ function viewingSlider(event: Boolean) {
   playSlider(pause.value)
 }
 
-function playSlider(pause:boolean) {
-  console.log('pause',pause)
-  if(!pause){
+function playSlider(pause: boolean) {
+  // console.log('pause', pause)
+  if (!pause) {
     //Object.assign(outTaskList, outTaskList.flat())
-    console.log('1111')
-  }else{
-    console.log('2222')
+    // console.log('1111')
+  } else {
+    // console.log('2222')
   }
-
-
 
 
   testStatus.value = true;
@@ -154,6 +154,7 @@ function playSlider(pause:boolean) {
 
   questionSlider = setInterval(() => {
     questionSliderFunction();
+    console.log('questionInterval() / 100 -------------------->',questionInterval() / 100)
   }, questionInterval() / 100);
 
   watch(() => stop.value, () => {
@@ -178,6 +179,7 @@ function educationStop() {
   progressBarModel.value = 0;
   checked.value = false
 }
+
 const schema = {
   interval: {
     as: 'interval',
