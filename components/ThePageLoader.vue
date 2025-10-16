@@ -3,7 +3,7 @@
 
 <template>
   <div class="shadow">
-    <img src="~/assets/images/loaderPage.gif">
+    <img src="~/assets/images/loaderPage.gif" alt="preload">
   </div>
 </template>
 

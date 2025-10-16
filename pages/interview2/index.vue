@@ -2,19 +2,20 @@
 import {BASE_COLOR, INPUT_TYPE} from "~/src/constant";
 import BaseInput from "~/components/base/BaseInput.vue";
 import {preparationGetJson} from "~/src/preparationGetJson";
-import type {QuestionFull} from "~/model/preparation";
+import type {Question, QuestionFull} from "~/model/preparation";
 import BaseButton from "~/components/base/BaseButton.vue";
-import {ref} from "vue";
+import {defineAsyncComponent, ref} from "vue";
 
 const baseQuestionList = (await preparationGetJson()).default,
     sortQuestionList = reactive(<QuestionFull[]>[]),
+    setListQuestions = reactive(<Question[]>[]),
+    itemQuestionArr = reactive(<Question>[]),
     playStop = ref(true),
     interviewStatus = ref(false),
-    progressBarModel = ref(59),
+    progressBarModel = ref(0),
+    audioLink = ref(''),
     interviewData = reactive({
-      timeInterview: '1',
-      mixTopics: false,
-      mixQuestion: false
+      timeInterview: '1'
     }),
     schema = {
       interval: {
@@ -24,22 +25,17 @@ const baseQuestionList = (await preparationGetJson()).default,
       }
     }
 
+let asyncModalWithOptions: any,
+    questionIntervalFunction: any
+
 function shuffleTopics() {
   sortQuestionList.sort(() => Math.random() - 0.5)
-  interviewData.mixTopics = true
-  setTimeout(()=>{
-    interviewData.mixTopics = false
-  },1000)
 }
 
 function shuffleQuestion() {
   sortQuestionList.forEach((item) => {
     item.list.sort(() => Math.random() - 0.5)
   })
-  interviewData.mixQuestion = true
-  setTimeout(()=>{
-    interviewData.mixQuestion = false
-  },1000)
 }
 
 function sortTopicsTag(tag: string, checked: boolean) {
@@ -56,6 +52,44 @@ function sortTopicsTag(tag: string, checked: boolean) {
         sortQuestionList.splice(index, 1)
       }
     })
+  }
+}
+
+function calkInterval(dopTime: number = 1) {
+  return (Number(interviewData.timeInterview) * 1000) * dopTime
+}
+
+function callAudio(question: Question) {
+  Object.assign(itemQuestionArr,question)
+  audioLink.value = question.audio
+  if (audioLink.value.length !== 0) {
+    asyncModalWithOptions = defineAsyncComponent({
+      loader: () => import('~/components/base/BaseAudio.vue'),
+    })
+  }
+}
+
+function itemQuestion(question: Question) {
+  progressBarModel.value = ++progressBarModel.value;
+  if (progressBarModel.value >= 100) {
+    progressBarModel.value = 0
+  }
+}
+
+function startInterview(event: boolean) {
+  if (setListQuestions.length === 0) {
+    Object.assign(setListQuestions, sortQuestionList.map(item => item.list).flat());
+  }
+  if (event) {
+    questionIntervalFunction = setInterval(() => {
+      itemQuestion(setListQuestions[0]);
+    }, calkInterval());
+    callAudio(setListQuestions[0]);
+    playStop.value = false
+  } else {
+    clearInterval(questionIntervalFunction)
+    playStop.value = true
+    return false;
   }
 }
 
@@ -79,13 +113,11 @@ function sortTopicsTag(tag: string, checked: boolean) {
           </label>
           <BaseButton
               @click="shuffleTopics()"
-              :class="{active:interviewData.mixTopics}"
           >Перемешать темы
           </BaseButton>
 
           <BaseButton
               @click="shuffleQuestion()"
-              :class="{active:interviewData.mixQuestion}"
           >Перемешать вопросы в темах
           </BaseButton>
         </div>
@@ -122,29 +154,42 @@ function sortTopicsTag(tag: string, checked: boolean) {
         <div class="interview__slider">
           <div class="slide">
             <strong class="slide__head">Вопрос</strong>
-              <v-progress-linear
-                  v-model="progressBarModel"
-                  height="16px"
-                  class="progressBar"
-              ></v-progress-linear>
-              <details class="slide__body">
-                <summary class="slide__accordion">333333</summary>
-                <br>
-                <div class="slide__down">
-                  33333
-                </div>
-              </details>
+            <v-progress-linear
+                v-model="progressBarModel"
+                height="16px"
+                class="progressBar"
+            ></v-progress-linear>
+            <component
+                v-if="audioLink.length !== 0"
+                :is="asyncModalWithOptions"
+                :audio-link="audioLink"
+            />
+            <details class="slide__body">
+              <summary class="slide__accordion">{{itemQuestionArr.question}}</summary>
+              <br>
+              <div class="slide__down">
+                {{itemQuestionArr.answer}}
+              </div>
+            </details>
           </div>
         </div>
         <div class="interview__button">
           <BaseButton
               class="button"
+              :disabled='sortQuestionList.length === 0'
           >
-            <span v-if="playStop">Старт</span>
-            <span v-else>Пауза</span>
+            <span
+                v-if="playStop"
+                @click="startInterview(true)"
+            >Старт</span>
+            <span
+                v-else
+                @click="startInterview(false)"
+            >Пауза</span>
           </BaseButton>
           <BaseButton
               class="button"
+              @click="startInterview(false)"
           >
             Сброс
           </BaseButton>
@@ -154,20 +199,21 @@ function sortTopicsTag(tag: string, checked: boolean) {
   </div>
 </template>
 <style lang="scss">
-.v-progress-linear__determinate{
+.v-progress-linear__determinate {
   background: rgb(95, 158, 160);
 }
 </style>
 <style scoped lang="scss">
-.progressBar{
+.progressBar {
   background: #5f9ea036;
   border-radius: 10px 10px 0 0;
   margin-bottom: -6px;
   z-index: 1;
   position: relative;
 }
-.slide{
-  &__body{
+
+.slide {
+  &__body {
     width: 500px;
     padding: 15px;
     border-radius: 10px;
@@ -177,18 +223,21 @@ function sortTopicsTag(tag: string, checked: boolean) {
     border-top: none;
     position: relative;
   }
-  &__accordion{
+
+  &__accordion {
     background: rgb(95 158 160 / 10%);
     cursor: pointer;
     padding: 5px;
     border-radius: 5px;
     border: solid 2px #5f9ea036;
   }
-  &__head{
+
+  &__head {
     margin-bottom: 10px;
     display: block;
   }
-  &__down{
+
+  &__down {
     padding: 10px;
     border: solid 2px rgba(95, 158, 160, 0.2117647059);
     border-radius: 5px;
@@ -199,6 +248,7 @@ function sortTopicsTag(tag: string, checked: boolean) {
 .interview {
   display: flex;
   gap: 20px;
+
   &__button {
     position: absolute;
     bottom: 0;
@@ -250,19 +300,21 @@ function sortTopicsTag(tag: string, checked: boolean) {
     &:last-of-type {
       margin-bottom: 0;
     }
-    button{
+
+    button {
       width: 100%;
       border: solid 2px rgb(95, 158, 160);
       border-top: none;
       border-left: none;
       transition: 1s;
-      &.active{
+
+      &:active {
         border: solid 1px red;
-        border-bottom: none;
-        border-right: none;
+
       }
     }
-    &.__controlMix{
+
+    &.__controlMix {
       display: flex;
       flex-wrap: wrap;
       gap: 15px;
@@ -277,7 +329,8 @@ function sortTopicsTag(tag: string, checked: boolean) {
     border-radius: 10px;
     position: relative;
   }
-  &__slider{
+
+  &__slider {
     display: flex;
     justify-content: center;
     align-items: center;
