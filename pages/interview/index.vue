@@ -1,375 +1,375 @@
 <script setup lang="ts">
-import {ref, watch, defineAsyncComponent} from "vue";
-import BaseH1 from "~/components/base/BaseH1.vue";
-
-import {preparationGetJson} from "~/src/preparationGetJson";
 import {BASE_COLOR, INPUT_TYPE} from "~/src/constant";
-import BaseButton from "~/components/base/BaseButton.vue";
 import BaseInput from "~/components/base/BaseInput.vue";
-import type {Question} from "~/model/preparation";
+import {preparationGetJson} from "~/src/preparationGetJson";
+import type {Question, QuestionFull} from "~/model/preparation";
+import BaseButton from "~/components/base/BaseButton.vue";
+import {defineAsyncComponent, ref} from "vue";
 
-import {Shuffle} from "~/composables/randomKeysArray";
+const baseQuestionList = (await preparationGetJson()).default,
+    sortQuestionList = reactive(<QuestionFull[]>[]),
+    setListQuestions = reactive(<Question[]>[]),
+    itemQuestionArr = reactive(<Question>{}),
+    playStop = ref(true),
+    progressBarModel = ref(0),
+    audioLink = ref(''),
+    interviewData = reactive({
+      timeInterview: '1'
+    }),
+    schema = {
+      interval: {
+        as: 'interval',
+        name: 'interval',
+        value: '1',
+      }
+    }
 
-const preparation = await preparationGetJson();
-const list = preparation.default;
+let asyncModalWithOptions: any,
+    questionIntervalFunction: any
 
-const selectFilter = reactive(<String[]>[]);
+function shuffleTopics() {
+  sortQuestionList.sort(() => Math.random() - 0.5)
+}
 
-const taskList = reactive(<Question[]>[]);
+function shuffleQuestion() {
+  sortQuestionList.forEach((item) => {
+    item.list.sort(() => Math.random() - 0.5)
+  })
+}
 
-const outTaskList = reactive(<Question[]>[]);
-
-const showQuestion = reactive(<Question>{});
-
-const progressBarModel = ref(0);
-const showIntervalQuestions = ref(1);
-const viewingDisableButton = ref(true);
-const testStatus = ref(false);
-const timeMultiplier = ref(0);
-const audio = ref('');
-const mixTopics = ref(false);
-const viewing = ref(true);
-const mixQuestions = ref(false);
-const checked = ref(false);
-const pause = ref(false)
-const stop = ref(false);
-const randomGroup = ref(false)
-let questionSlider: any;
-let asyncModalWithOptions: any;
-
-const selectCheck = (item: string) => {
-  if (selectFilter.length === 0 || !selectFilter.includes(item)) {
-    selectFilter.push(item)
+function sortTopicsTag(tag: string, checked: boolean) {
+  if (checked) {
+    let itemTopic = baseQuestionList.find((item) => {
+      if (item.tag === tag) {
+        return item
+      }
+    })
+    sortQuestionList.push(itemTopic)
   } else {
-    selectFilter.forEach((elDelete, index) => {
-      if (elDelete === item) {
-        selectFilter.splice(index, 1)
+    sortQuestionList.forEach((elDelete, index) => {
+      if (elDelete.tag === tag) {
+        sortQuestionList.splice(index, 1)
       }
     })
   }
-  viewingDisableButton.value = selectFilter.length === 0;
-
-  let selectArrayQuestion: Question[][] = []
-  for (let task of list) {
-    selectFilter.forEach((item) => {
-      if (task.tag === item) {
-        selectArrayQuestion.push(task.list)
-      } else {
-
-      }
-    })
-  }
-  Object.assign(taskList, selectArrayQuestion)
-  mapGroupTask()
 }
 
-const playStop = (event: Boolean) => {
+function calkInterval(dopTime: number = 1) {
+  return (Number(interviewData.timeInterview) * 1000) * dopTime
+}
+
+function callAudio(question: Question | undefined) {
+  if(question === undefined) return false
+  Object.assign(itemQuestionArr,question)
+  audioLink.value = question.audio
+  asyncModalWithOptions = defineAsyncComponent({
+    loader: () => import('~/components/base/BaseAudio.vue'),
+  })
+}
+
+function itemQuestion(reset: boolean = false ) {
+  progressBarModel.value = ++progressBarModel.value;
+  if (progressBarModel.value >= 100) {
+    progressBarModel.value = 0
+  }
+  if(reset){
+    progressBarModel.value = 0
+  }
+}
+
+function startInterview(event: boolean) {
+  if (setListQuestions.length === 0) {
+    Object.assign(setListQuestions, sortQuestionList.map(item => item.list).flat());
+  }
   if (event) {
-    clearInterval(questionSlider);
-    pause.value = true;
+    questionIntervalFunction = setInterval(() => {
+      itemQuestion();
+    }, calkInterval());
+    callAudio(setListQuestions.shift());
+    playStop.value = false
   } else {
-    viewingDisableButton.value = false;
+    clearInterval(questionIntervalFunction)
+    playStop.value = true
+    return false;
   }
 }
 
-const nextTask = () => {
-  Object.assign(showQuestion, outTaskList.shift())
-  audio.value = showQuestion.audio
-  if (audio.value.length !== 0) {
-    asyncModalWithOptions = defineAsyncComponent({
-      loader: () => import('~/components/base/BaseAudio.vue'),
-    })
-  }
-
-  if (taskList.length === 0) stop.value = true;
-  return showQuestion.time;
+function nextQuestion() {
+  callAudio(setListQuestions.shift());
+  itemQuestion(true)
 }
-
-function questionInterval() {
-  return showIntervalQuestions.value * 60000 * (timeMultiplier.value || 1);
+function stop(){
+  itemQuestion(true)
+  clearInterval(questionIntervalFunction)
+  setListQuestions.length = 0
+  itemQuestionArr.question = ''
+  playStop.value = true
 }
-
-function questionRandom(item: boolean) {
-}
-
-function mapGroupTask() {
-  if (!randomGroup.value) {
-    outTaskList.length = 0
-    Object.assign(outTaskList, taskList)
-  } else {
-    Object.assign(outTaskList, Shuffle(taskList.slice()))
-  }
-}
-
-function randomGroupTask(item: boolean) {
-  randomGroup.value = item
-  mapGroupTask()
-}
-
-function viewingSlider(event: Boolean) {
-  playStop(event)
-  console.log('start-----------> viewingSlider')
-  if (event) {
-    return false
-  } else {
-    if (!mixTopics.value) Object.assign(outTaskList, taskList.flat())
-  }
-  // if (pause.value) {
-  //   console.log('stop  ----> start',progressBarModel.value)
-  //
-  // } else {
-  //   playSlider(pause.value)
-  // }
-  playSlider(pause.value)
-}
-
-function playSlider(pause: boolean) {
-  // console.log('pause', pause)
-  if (!pause) {
-    //Object.assign(outTaskList, outTaskList.flat())
-    // console.log('1111')
-  } else {
-    // console.log('2222')
-  }
-
-
-  testStatus.value = true;
-  timeMultiplier.value = <number>nextTask();
-
-  function questionSliderFunction() {
-    progressBarModel.value = ++progressBarModel.value;
-    if (progressBarModel.value >= 100) {
-      progressBarModel.value = 0
-      timeMultiplier.value = <number>nextTask();
-    }
-  }
-
-  watch(() => questionInterval(), () => {
-    clearInterval(questionSlider)
-    questionSlider = setInterval(() => {
-      questionSliderFunction();
-    }, questionInterval() / 100);
-  }, {deep: true});
-
-
-  questionSlider = setInterval(() => {
-    questionSliderFunction();
-    console.log('questionInterval() / 100 -------------------->',questionInterval() / 100)
-  }, questionInterval() / 100);
-
-  watch(() => stop.value, () => {
-    if (stop.value) {
-      setTimeout(() => {
-        clearInterval(questionSlider)
-      }, questionInterval());
-    }
-  }, {deep: true});
-}
-
-const nextQuestions = () => {
-  progressBarModel.value = 100;
-}
-
-function educationStop() {
-  selectFilter.length = 0;
-  viewingDisableButton.value = true;
-  taskList.length = 0
-  viewing.value = true
-  testStatus.value = false;
-  progressBarModel.value = 0;
-  checked.value = false
-}
-
-const schema = {
-  interval: {
-    as: 'interval',
-    name: 'interval'
-  }
-}
-
 
 </script>
 <template>
   <div class="pageContainer">
     <BaseH1/>
-    <div class="preparation">
-      <div class="preparation__list">
-        <div class="preparation__control">
+    <div class="interview">
+      <div class="interview__sidebar">
+        <div class="interview__control __controlMix">
           <label>
             <span>
-              Интервал между вопросами в минутах,<br> базовый интервал 1 минута
+              Интервал между вопросами в минутах
             </span>
             <BaseInput
-                v-model="showIntervalQuestions"
+                v-model="interviewData.timeInterview"
                 :schema="schema.interval"
                 :inputType="INPUT_TYPE.number"
+                :value="interviewData.timeInterview"
             />
           </label>
-          <label class="preparation__control-item">
-            <v-checkbox
-                density="compact"
-                hide-details
-                :color="BASE_COLOR"
-                @click="randomGroupTask(mixTopics = !mixTopics)"
-            />
-            <span>Перемешать темы</span>
-          </label>
-          <label class="preparation__control-item">
-            <v-checkbox
-                density="compact"
-                hide-details
-                :color="BASE_COLOR"
-                @click="questionRandom(mixQuestions = !mixQuestions)"
-            />
-            <span>Перемешать вопросы в темах</span>
-          </label>
-        </div>
-        <div
-            v-for="item of list"
-        >
-          <v-checkbox
-              density="compact"
-              hide-details
-              :color="BASE_COLOR"
-              :value="item.tag"
-              :label="item.name"
-              v-model="checked"
-              @change="selectCheck(item.tag)"
-              multiple
-          />
-        </div>
-        <div class="preparation__nav">
           <BaseButton
-              @click="viewingSlider(viewing = !viewing)"
-              :disabled='viewingDisableButton'
-              class="button"
+              @click="shuffleTopics()"
+          >Перемешать темы
+          </BaseButton>
+
+          <BaseButton
+              @click="shuffleQuestion()"
+          >Перемешать вопросы в темах
+          </BaseButton>
+        </div>
+        <div class="interview__control">
+          <label
+              class="checkbox"
+              v-for="(topic, index) of baseQuestionList"
           >
-            <span v-if="viewing">Старт</span>
-            <span v-else>Пауза</span>
+            <v-checkbox
+                density="compact"
+                hide-details
+                :color="BASE_COLOR"
+                @change="sortTopicsTag(topic.tag,$event.target.checked)"
+                multiple
+            />
+            <span>{{ topic.name }}</span>
+          </label>
+        </div>
+      </div>
+      <div class="interview__slider-container">
+        <div
+            class="interview__tags"
+            v-if="sortQuestionList.length !== 0"
+        >
+          <div
+              class="interview__tags-item"
+              v-for="topic in sortQuestionList"
+          >
+            {{ topic.name }}
+            <span>{{ topic.list.length }}</span>
+          </div>
+
+        </div>
+        <div class="interview__slider">
+          <div class="slide">
+            <strong class="slide__head">Вопрос</strong>
+            <v-progress-linear
+                v-model="progressBarModel"
+                height="16px"
+                class="progressBar"
+            ></v-progress-linear>
+            <component
+                v-if="audioLink.length !== 0"
+                :is="asyncModalWithOptions"
+                :audio-link="audioLink"
+            />
+            <details class="slide__body">
+              <summary class="slide__accordion">{{itemQuestionArr.question}}</summary>
+              <br>
+              <div class="slide__down">
+                {{itemQuestionArr.answer}}
+              </div>
+            </details>
+          </div>
+        </div>
+        <div class="interview__button">
+          <BaseButton
+              class="button"
+              :disabled='sortQuestionList.length === 0'
+          >
+            <span
+                v-if="playStop"
+                @click="startInterview(true)"
+            >Старт</span>
+            <span
+                v-else
+                @click="startInterview(false)"
+            >Пауза</span>
           </BaseButton>
           <BaseButton
-              @click="educationStop"
-              :disabled='viewingDisableButton'
+              v-if="!playStop"
+              @click="nextQuestion"
+          >
+            Следующий
+          </BaseButton>
+          <BaseButton
               class="button"
+              @click="stop"
           >
             Сброс
           </BaseButton>
         </div>
       </div>
-      <div class="preparation__task">
-        <div class="card-task__wrap">
-          <div v-if="testStatus">Осталось вопросов {{ outTaskList.length }}</div>
-          <div
-              v-if="testStatus"
-              class="card-task">
-            <v-progress-linear
-                v-model="progressBarModel"
-                height="10"
-                class="question_time_progress"
-            ></v-progress-linear>
-            <component
-                v-if="audio.length !== 0"
-                :is="asyncModalWithOptions"
-                :audio-link="audio"
-            />
-
-            <details class="taskItem">
-              <summary class="btnAccordion">{{ showQuestion.question }}</summary>
-              <br>
-              <div>
-                {{ showQuestion.answer }}
-              </div>
-            </details>
-            <BaseButton
-                @click="nextQuestions()"
-            >
-              Далее
-            </BaseButton>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
-
+<style lang="scss">
+.v-progress-linear__determinate {
+  background: rgb(95, 158, 160);
+}
+</style>
 <style scoped lang="scss">
-
-.card-task {
-  display: block;
+.progressBar {
+  background: #5f9ea036;
+  border-radius: 10px 10px 0 0;
+  margin-bottom: -6px;
+  z-index: 1;
   position: relative;
-  box-shadow: 0 0 10px #ababab;
-  border-radius: 10px;
-  padding: 15px;
-  margin-top: 15px;
+}
 
-  &__wrap {
-    width: 50%;
-    margin: 20px auto;
+.slide {
+  &__body {
+    width: 500px;
+    padding: 15px;
+    border-radius: 10px;
+    border: solid 2px rgba(95, 158, 160, 0.2117647059);
+    z-index: 2;
+    background: #fff;
+    border-top: none;
+    position: relative;
+  }
+
+  &__accordion {
+    background: rgb(95 158 160 / 10%);
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    border: solid 2px #5f9ea036;
+  }
+
+  &__head {
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  &__down {
+    padding: 10px;
+    border: solid 2px rgba(95, 158, 160, 0.2117647059);
+    border-radius: 5px;
+    background: rgba(95, 158, 160, 0.1);
   }
 }
 
-.button {
-  width: 100%;
-  margin: 15px 0;
-}
-
-.taskItem {
-  position: relative;
-  z-index: 2;
-  border-radius: 10px;
-  cursor: pointer;
-  margin-bottom: 25px;
-}
-
-.preparation {
+.interview {
   display: flex;
-  align-items: flex-start;
+  gap: 20px;
 
-  &__list {
-    width: 20%;
+  &__button {
+    position: absolute;
+    bottom: 0;
+    left: 15px;
+    right: 15px;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    border-radius: 10px 10px 0 0;
+    border: solid 3px #5f9ea036;
+    border-bottom: none;
+    padding: 15px;
   }
 
-  &__task {
-    width: 80%;
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 0 0 10px 10px;
+    border: solid 3px #5f9ea036;
+    border-top: none;
+    position: relative;
+    z-index: 2;
+
+    &-item {
+      font-size: 12px;
+      padding: 5px;
+      border: solid 1px #5f9ea036;
+      border-radius: 5px;
+
+      span {
+        color: rgb(95 158 160);
+      }
+    }
+  }
+
+  &__sidebar {
+    width: 20%;
   }
 
   &__control {
     border: solid 4px #5f9ea036;
     padding: 10px;
     border-radius: 10px;
+    margin-bottom: 20px;
 
-    &-item {
-      display: flex;
-      align-items: center;
+    &:last-of-type {
+      margin-bottom: 0;
+    }
 
-      span {
-        cursor: pointer;
+    button {
+      width: 100%;
+      border: solid 2px rgb(95, 158, 160);
+      border-top: none;
+      border-left: none;
+      transition: 1s;
+
+      &:active {
+        border: solid 1px red;
+
       }
     }
+
+    &.__controlMix {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      font-size: 14px;
+    }
+  }
+
+  &__slider-container {
+    width: 80%;
+    border: solid 4px #5f9ea036;
+    padding: 0 15px 15px 15px;
+    border-radius: 10px;
+    position: relative;
+  }
+
+  &__slider {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    bottom: 70px;
+    z-index: 1;
   }
 }
 
-.question_time_progress {
-  position: absolute;
-  left: 0;
-  margin: 0 0 0;
-  border-radius: 10px 10px 0 0;
-}
-
-.preparation__nav {
-  position: fixed;
-  bottom: 100px;
+.checkbox {
   display: flex;
-  justify-content: center;
-  width: 100vw;
-  left: 0;
-  right: 0;
-  margin: auto;
-  gap: 20px;
-
-  button {
-    width: 200px;
-    margin: 0;
+  align-items: center;
+  cursor: pointer;
+  &:hover{
+    span{
+      text-shadow: 1px -1px 16px rgb(95 158 160);
+    }
   }
 }
 

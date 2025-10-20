@@ -20,12 +20,6 @@ export const NAV_ITEMS = [
         visibility: true
     },
     {
-        page: '/interview2',
-        name: 'Подготовка test',
-        h1: 'Подготовка к собеседованию',
-        visibility: true
-    },
-    {
         page: '/training',
         name: 'Базовые задачи',
         h1: 'Базовые задачи по разному функционалу',
