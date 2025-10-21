@@ -137,7 +137,7 @@ function stop(){
         <div class="interview__control">
           <label
               class="checkbox"
-              v-for="(topic, index) of baseQuestionList"
+              v-for="topic of baseQuestionList"
           >
             <v-checkbox
                 density="compact"
@@ -159,8 +159,8 @@ function stop(){
               class="interview__tags-item"
               v-for="topic in sortQuestionList"
           >
-            {{ topic.name }}
-            <span>{{ topic.list.length }}</span>
+            {{ topic.name }}<br>
+            <span>Вопросов {{ topic.list.length }}</span>
           </div>
 
         </div>
@@ -326,13 +326,10 @@ function stop(){
       border-top: none;
       border-left: none;
       transition: 1s;
-
       &:active {
         border: solid 1px red;
-
       }
     }
-
     &.__controlMix {
       display: flex;
       flex-wrap: wrap;
