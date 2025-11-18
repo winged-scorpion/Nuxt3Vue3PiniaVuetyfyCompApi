@@ -11,6 +11,7 @@ const props = defineProps({
   }
 })
 
+
 </script>
 
 <template>
@@ -23,18 +24,21 @@ const props = defineProps({
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
       referrerpolicy="strict-origin-when-cross-origin"
       allowfullscreen></iframe>
-
-  <div>
-    {{name}} name
-    {{link}} link
+  <div class="description">
+    {{ name }}
   </div>
 
 </template>
 
 <style scoped lang="scss">
-.customClassName{
+.customClassName {
   width: 100%;
   height: 400px;
+}
+
+.description {
+  font-size: 14px;
+  padding: 5px 12px;
 }
 
 

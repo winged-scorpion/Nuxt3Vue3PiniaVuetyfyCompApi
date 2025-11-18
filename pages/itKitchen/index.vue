@@ -2,77 +2,47 @@
 
 import BaseH1 from "~/components/base/BaseH1.vue";
 import {ref} from "vue";
+import {getKitchenJson} from "~/src/itKitchenJson";
 
-const videoList = [
-  {
-    id: 1,
-    description: 'кратко по терминологий',
-    link: 'https://www.youtube.com/watch?v=gV6eobXisYU',
-    img: 'https://jsek.work/vt-sunflowers.jpg'
-  },
-  {
-    id: 2,
-    description: 'event-loop',
-    link: 'https://www.youtube.com/watch?v=377qAu37OTE',
-    img: 'https://jsek.work/vt-sunflowers.jpg'
-  },
-  {
-    id: 3,
-    description: 'собеседование на junior хорошее по скриптам',
-    link: 'https://www.youtube.com/watch?v=ScRTey_dvhI',
-    img: 'https://jsek.work/vt-sunflowers.jpg'
-  },
-  {
-    id: 4,
-    description: 'по вью',
-    link: 'https://www.youtube.com/watch?v=IeZt4h0w0Kg&t=7519s',
-    img: 'https://jsek.work/vt-sunflowers.jpg'
-  },
-  {
-    id: 5,
-    description: '16 вопросов по js',
-    link: 'https://www.youtube.com/watch?v=3kLS5UPvfss',
-    img: 'https://jsek.work/vt-sunflowers.jpg'
-  },
-  {
-    id: 6,
-    description: "важное по резюме",
-    link: "https://www.youtube.com/watch?v=_ytszV4ItAg&ab_channel=СаняобIT",
-    img: 'https://jsek.work/vt-sunflowers.jpg'
-  }
-]
+const itKitchen = await getKitchenJson()
+const videoList = itKitchen.default
+
 const showVideo = reactive({
-  taskHead:<string> '',
-  video:<string> ''
+  taskHead: <string>'',
+  video: <string>''
 })
+
 function openVideo(id: number) {
   let itemVideo = videoList.find(item => item.id === id)
   showVideo.video = itemVideo.link
   showVideo.taskHead = itemVideo.description
-
   modalVisible.value = true
 }
+
 const modalVisible = ref(false)
 
 </script>
-
-
 <template>
   <div class="pageContainer">
     <BaseH1/>
 
     <div class="player player-wrap">
       <div
-          class="player__body"
+          class="player__tile"
           v-for="item in videoList"
-          @click="openVideo(item.id)"
       >
-        <v-icon class="player__play">mdi-play-box</v-icon>
-        <img
-            :src="item.img"
-            :alt="item.description"
+        <div
+            class="player__card"
+
+            @click="openVideo(item.id)"
         >
-        <div class="player__description">{{ item.description }}</div>
+          <v-icon class="player__play">mdi-play-box</v-icon>
+          <img
+              :src="item.img"
+              :alt="item.description"
+          >
+          <div class="player__description">{{ item.description }}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -111,28 +81,10 @@ const modalVisible = ref(false)
 }
 
 .player {
-  &-wrap {
-    margin: 25px 0;
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    gap: 2%
-  }
-
-  &__body {
-    width: 32%;
-    height: 200px;
-    margin-bottom: 15px;
-    min-width: 450px;
-    background: #5f9ea091;
-    display: flex;
-    align-items: end;
-    color: #fff;
-    font-size: 18px;
-    cursor: pointer;
-    border-radius: 40px 0 0 0;
+  &__tile {
     position: relative;
-    overflow: hidden;
+    width: 32%;
+    margin-bottom: 15px;
 
     &:before {
       content: '';
@@ -145,11 +97,43 @@ const modalVisible = ref(false)
       bottom: 0;
       border-radius: 40px 0 0 0;
       z-index: 2;
+      border-top: solid 2px rgb(95, 158, 160);
+      border-left: solid 2px rgb(95, 158, 160);
     }
 
+    &:has(.player__card){
+      &:hover{
+        &:before{
+          border-top: solid 2px red;
+          border-left: solid 2px red;
+        }
+      }
+    }
+  }
+  &-wrap {
+    margin: 25px 0;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 2%
+  }
+
+  &__card {
+    height: 200px;
+    min-width: 450px;
+    background: #5f9ea091;
+    display: flex;
+    align-items: end;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 40px 0 0 0;
+    position: relative;
+    overflow: hidden;
+    border: solid 2px rgb(95, 158, 160);
     &:hover {
       background: rgb(95 158 160);
-
+      border: solid 2px red;
       i {
         opacity: 1;
       }

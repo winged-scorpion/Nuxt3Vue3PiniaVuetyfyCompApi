@@ -3,7 +3,6 @@ import type {ModalContentLiveCode} from "~/model/modal";
 import {type PropType} from "vue";
 import BaseCarousel from "~/components/base/BaseCarousel.vue";
 
-
 const props = defineProps({
   task: {
     type: Object as PropType<ModalContentLiveCode>,
@@ -18,13 +17,13 @@ const props = defineProps({
     required: true
   }
 })
-let test = 'www.youtube.com/watch?v=3bGNuRtlqAQ'
 </script>
 
 <template>
   <div
       class="modal"
-      :class="{show: visible}"
+
+      v-if="visible"
   >
     <div class="modal__body">
       <div v-if="typeContent === 'livecode'">
@@ -60,16 +59,17 @@ let test = 'www.youtube.com/watch?v=3bGNuRtlqAQ'
   height: 100%;
   background: #00000033;
   z-index: 9999;
-  display: none;
+  display: flex;
   justify-content: center;
   align-items: center;
 
-  &__body{
+  &__body {
     position: relative;
-    width: 50%;
+    width: 560px;
     background: #fff;
   }
-  button{
+
+  button {
     width: 50px;
     height: 50px;
     position: absolute;
@@ -78,11 +78,12 @@ let test = 'www.youtube.com/watch?v=3bGNuRtlqAQ'
 
   }
 }
-.show{
+
+.show {
   display: flex;
 }
 
-.x-video{
+.x-video {
   background: red;
   width: 500px;
   height: 500px;

@@ -19,5 +19,10 @@ export default defineNuxtConfig({
     ],
     devServer: {
         host: 'https://localhost:8000/'
+    },
+    vite: {
+        server: {
+            allowedHosts: [process.env.host],
+        },
     }
 })
