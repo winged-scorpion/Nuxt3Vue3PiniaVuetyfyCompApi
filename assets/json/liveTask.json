@@ -51,7 +51,10 @@
   ],
   [
     "Повёрнута ли строка Анаграмма",
-    ["const isStringRotated = (str1:string,str2:string) => {\n  if(str1.length !== str2.length){\n    return false;\n  }else{\n    let result:boolean = false;\n    let mapCollection1 = str1.toLowerCase().split('').sort();\n    let mapCollection2 = str2.toLowerCase().split('').sort();\n    for(let i=0;i<=mapCollection1.length;i++){\n      if(mapCollection1[i] === mapCollection2[i]){\n        result = true\n      }else{\n        result = false\n        return false\n      }\n    }\n    return result\n  }\n}\nconsole.log(isStringRotated('javascript','tpIrcsavaj'))"]
+    [
+      "const isStringRotated = (str1:string,str2:string) => {\n  if(str1.length !== str2.length){\n    return false;\n  }else{\n    let result:boolean = false;\n    let mapCollection1 = str1.toLowerCase().split('').sort();\n    let mapCollection2 = str2.toLowerCase().split('').sort();\n    for(let i=0;i<=mapCollection1.length;i++){\n      if(mapCollection1[i] === mapCollection2[i]){\n        result = true\n      }else{\n        result = false\n        return false\n      }\n    }\n    return result\n  }\n}\nconsole.log(isStringRotated('javascript','tpIrcsavaj'))",
+      "function isAnagram(a:string, b:string) {\n  return a.toLowerCase().split('').sort().join() === b.toLowerCase().split('').sort().join()\n}\nconsole.log(isAnagram('Гора', 'РоГаx'))"
+    ]
   ],
   [
     "Фибоначи",
@@ -67,7 +70,10 @@
   ],
   [
     "Палиндром, с учётом регистра, пробелов и знаков припинания",
-    ["const polydrome = (val:string) => {\n  let val0_1 = val\n      .toLowerCase()\n      .replaceAll(' ', '')\n      .replace(/[^\\w\\s]|_/g, \"\")\n      .split('');\n  let val1_0 = val\n      .toLowerCase()\n      .replaceAll(' ', '')\n      .replace(/[^\\w\\s]|_/g, \"\")\n      .split('')\n      .reverse();\n\n  return val0_1.join('') === val1_0.join('');\n\n}\nconsole.log(polydrome('О, духи, от уборки микробу-то и худо'))"]
+    [
+      "const polydrome = (val:string) => {\n  let val0_1 = val\n      .toLowerCase()\n      .replaceAll(' ', '')\n      .replace(/[^\\w\\s]|_/g, \"\")\n      .split('');\n  let val1_0 = val\n      .toLowerCase()\n      .replaceAll(' ', '')\n      .replace(/[^\\w\\s]|_/g, \"\")\n      .split('')\n      .reverse();\n\n  return val0_1.join('') === val1_0.join('');\n\n}\nconsole.log(polydrome('О, духи, от уборки микробу-то и худо'))",
+      "function isPalindrome(str) {\n  let strArr = str.toLowerCase().split('');\n  let result = true;\n  while (strArr.length > 0) {\n    let first = strArr[0];\n    let end = strArr.pop();\n    strArr.splice(0,1)\n    if(first !== end){\n      result = false\n      return false\n    }\n  }\n  if(result) return true\n}"
+    ]
   ],
   [
     "Очередь с 0(1) сложностью операций",
@@ -95,5 +101,25 @@
   [
     "Напишите функцию на джаваскрипт, которая принимает параметр со строкой и преобразовывает ее в следующий вид:\"Привет Мир\" => \"прИвЕт мИр\"",
     ["const pol = (val:any) => {\n  let result = []\n  let params = [\"а\", \"е\", \"ё\", \"и\", \"о\", \"у\", \"ы\", \"э\", \"ю\", \"я\"];\n  let tempResult = val.split('');\n  function findPar(val:string) {\n    let st = false;\n    params.forEach((item)=> {\n      if(val === item){\n        st = true\n      }\n    })\n    return st\n  }\n   for(let Letter of tempResult){\n     if(findPar(Letter)){\n       result.push(Letter.toUpperCase())\n     }else{\n       result.push(Letter)\n     }\n  }\n  return result.join('');\n}\nconsole.log(pol('Это относительно'))"]
+  ],
+  [
+    "Факториал",
+    ["function factorial(n: number) {\n  let size = 1;\n  let amount = 1;\n  while (size < n) {\n    size++\n    amount = amount * size\n  }\n  return amount\n}\nconsole.log(factorial(5))"]
+  ],
+  [
+    "Подсчёт гласных",
+    ["function getVowelsCount(str) {\n  const result = [];\n  const vowels = ['А', 'Е', 'Ё', 'О', 'У', 'Ы', 'Э', 'И', 'Ю', 'Я'];\n  let strArr = str.toUpperCase().replaceAll(' ','').split('');\n\n  strArr.forEach((letter)=>{\n    if(vowels.indexOf(letter) >= 0){\n      result.push(letter)\n    }\n  })\n  return result.length\n}\nconsole.log(getVowelsCount('Напишите код здесь'))"]
+  ],
+  [
+    "Сумма цифр",
+    ["function sumDigits(number) {\n  let summ = 0\n  number.toString().split('').forEach((item)=>{\n    summ = summ + item * 1\n  })\n  return summ\n}\nconsole.log(sumDigits(123))"]
+  ],
+  [
+    "Разбить по частям",
+    ["function chunkArray(array, size) {\n  const result = [];\n  while (array.length !== 0) {\n    let tempArray = []\n    for(let i = 0; i < size; i++){\n      let itemNumber = array.shift()\n      if(itemNumber !== undefined) tempArray.push(itemNumber)\n    }\n    result.push(tempArray)\n  }\n  return result\n}\n\nconsole.log(chunkArray([2, 3, 4, 5,6], 2))"]
+  ],
+  [
+    "Квадрат 3х3",
+    ["function checkSquare(square) {\n  return new Set(square.flat(Infinity)).size === square.flat(Infinity).length\n}\n\nconsole.log(\n    checkSquare([\n      [1, 2, 3],\n      [4, 4, 6],\n      [7, 8, 9]\n    ]) // true\n"]
   ]
 ]

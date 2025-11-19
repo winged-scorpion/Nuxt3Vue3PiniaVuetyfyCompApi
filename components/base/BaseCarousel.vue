@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import {IMG_LIST} from "~/src/constant";
-import {type PropType} from "vue";
+import {computed, type PropType} from "vue";
 import type {ModalContentLiveCode} from "~/model/modal";
 
 const props = defineProps({
@@ -30,10 +30,6 @@ const validateBackground = (str: string) => {
   })
   return link;
 }
-const taskListStatus = ref(false);
-watch(() => props, () => {
-  taskListStatus.value = props.taskList !== undefined;
-}, {deep: true});
 </script>
 <template>
   <v-carousel
@@ -50,10 +46,11 @@ watch(() => props, () => {
     </v-carousel-item>
   </v-carousel>
   <v-carousel
-      v-if="taskListStatus"
+      v-if="taskList !== undefined"
       height="auto"
       :show-arrows="props.taskList?.taskCode && props.taskList.taskCode.length > 1"
       :class="{'__noPagination':props.taskList?.taskCode?.length === 1}"
+      class="custom-button"
   >
     <v-carousel-item
         v-for="(item,i) of props.taskList?.taskCode"
@@ -71,6 +68,8 @@ watch(() => props, () => {
 
 
 <style lang="scss">
+
+
 .v-btn--active {
   background: rgb(95, 158, 160);
 }
@@ -82,6 +81,21 @@ watch(() => props, () => {
 .__noPagination {
   .v-carousel__controls {
     display: none;
+  }
+}
+
+.custom-button {
+  .v-window__left,.v-window__right{
+    bottom: 0;
+    position: absolute;
+    z-index: 2;
+  }
+  .v-window__left {
+    left: 0;
+  }
+
+  .v-window__right {
+    right: 0;
   }
 }
 </style>

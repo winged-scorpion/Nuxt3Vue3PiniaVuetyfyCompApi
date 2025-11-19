@@ -22,10 +22,12 @@ const props = defineProps({
 <template>
   <div
       class="modal"
-
       v-if="visible"
   >
-    <div class="modal__body">
+    <div
+        class="modal__body"
+        :class="{'liveCode-modal':typeContent === 'livecode'}"
+    >
       <div v-if="typeContent === 'livecode'">
         <BaseCarousel
             :show-arrows="false"
@@ -67,6 +69,9 @@ const props = defineProps({
     position: relative;
     width: 560px;
     background: #fff;
+    max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   button {
@@ -77,6 +82,9 @@ const props = defineProps({
     top: 0;
 
   }
+}
+.liveCode-modal{
+  max-width: 50%;
 }
 
 .show {
