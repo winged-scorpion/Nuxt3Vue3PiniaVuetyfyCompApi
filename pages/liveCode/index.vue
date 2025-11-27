@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {randomBackground} from '~/src/functions';
-import {getLiveTaskJson} from "~/src/liveTaskGetJson";
+import {getJsonFunction} from "~/composables/getJson";
 import {ref} from "vue";
 import MasonryWall from '@yeger/vue-masonry-wall';
 import TaskTileComponent from "~/components/TaskTilePreComponent.vue";
@@ -8,15 +8,15 @@ import BaseH1 from "~/components/base/BaseH1.vue";
 
 const
     modalVisible = ref(false),
-    taskList = await getLiveTaskJson()
-const taskListArr = reactive({
-  taskCode: [] as string[],
-  taskHead: ''
-})
+    taskList = await getJsonFunction('liveCode'),
+    taskListArr = reactive({
+      taskCode: [] as string[],
+      taskHead: ''
+    })
 
 function openDialog(taskId: number) {
-  taskListArr.taskCode = taskList.default[taskId][1];
-  taskListArr.taskHead = String(taskList.default[taskId][0]);
+  taskListArr.taskCode = taskList[taskId][1];
+  taskListArr.taskHead = String(taskList[taskId][0]);
   modalVisible.value = true;
 }
 
@@ -24,7 +24,7 @@ function openDialog(taskId: number) {
 <template>
   <div class="pageContainer">
     <BaseH1/>
-    <masonry-wall :items="taskList.default" :ssr-columns="1" :column-width="300" :gap="16">
+    <masonry-wall :items="taskList" :ssr-columns="1" :column-width="300" :gap="16">
       <template #default="{ item, index }">
         <TaskTileComponent
             @click="openDialog(index)"

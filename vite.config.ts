@@ -11,6 +11,8 @@ export default defineConfig({
             template: {
                 compilerOptions: {
                     isCustomElement: (tag:any) => ['ErrorMessage','Field','v-btn'].includes(tag),
+                    resolveJsonModule : true,
+                    module : "commonjs"
                 }
             }
         }),

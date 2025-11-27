@@ -7,12 +7,7 @@ import {useProjectList} from "~/store/projectList";
 const projectListStore = useProjectList()
 projectListStore.getProjectList()
 
-const projectListArrBase = computed(() => {
-  if (projectListStore.outProduct) {
-    return projectListStore.outProduct
-  }
-  return false
-})
+const projectListArrBase = computed(() => projectListStore.outProduct)
 
 const numGenerate = (max: number) => Math.floor(Math.random() * max);
 
@@ -28,11 +23,9 @@ function updateShowProjectList(item: [number, number]) {
     <TheRangeSlider
         @updateProjectList="updateShowProjectList"
     />
-
     <div
         class="projectList"
     >
-
       <TheIndexTileProjectComponent
           v-for="item of projectListArrBase"
           :projectArr="item"

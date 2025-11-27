@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import type {ProjectCompanyList} from "~/model/projectListSlider";
-import {projectGetJson} from "~/src/projectGetJson";
+import {getJsonFunction} from "~/composables/getJson";
 
 export interface ProjectListState {
     setProjectList: null | ProjectCompanyList[]
@@ -17,15 +17,15 @@ export const useProjectList = defineStore('projectList', {
     },
     actions: {
         async getProjectList(slice?:[number,number]) {
-            await projectGetJson().then((value) => {
-                if(value.projectListArr){
+            await getJsonFunction('project').then((value:ProjectCompanyList[]) => {
+                if(value){
                     if(slice){
-                        this.setProjectList = value.projectListArr.slice(slice[0], slice[1] + 1).flat()
-                        return false
+                        this.setProjectList = value.slice(slice[0], slice[1] + 1).flat()
+                    }else{
+                        this.setProjectList = value
                     }
-                    this.setProjectList = value.projectListArr
                 }
-            });
+            })
         }
     }
 })

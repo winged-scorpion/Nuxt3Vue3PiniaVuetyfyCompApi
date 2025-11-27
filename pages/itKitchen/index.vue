@@ -2,21 +2,21 @@
 
 import BaseH1 from "~/components/base/BaseH1.vue";
 import {ref} from "vue";
-import {getKitchenJson} from "~/src/itKitchenJson";
+import {getJsonFunction} from "~/composables/getJson";
+import type {VideoList} from "~/model/videoList";
 
-const itKitchen = await getKitchenJson()
-const videoList = itKitchen.default
-
-const showVideo = reactive({
-  taskHead: <string>'',
-  video: <string>''
-})
+const itKitchen:VideoList[] = await getJsonFunction('kitchen'),
+    videoList = itKitchen,
+    showVideo = reactive({
+      taskHead: '',
+      video: ''
+    })
 
 function openVideo(id: number) {
-  let itemVideo = videoList.find(item => item.id === id)
-  showVideo.video = itemVideo.link
-  showVideo.taskHead = itemVideo.description
-  modalVisible.value = true
+  const itemVideo:VideoList = videoList.find(item => item.id === id);
+  showVideo.video = itemVideo.link;
+  showVideo.taskHead = itemVideo.description;
+  modalVisible.value = true;
 }
 
 const modalVisible = ref(false)
@@ -101,15 +101,16 @@ const modalVisible = ref(false)
       border-left: solid 2px rgb(95, 158, 160);
     }
 
-    &:has(.player__card){
-      &:hover{
-        &:before{
+    &:has(.player__card) {
+      &:hover {
+        &:before {
           border-top: solid 2px red;
           border-left: solid 2px red;
         }
       }
     }
   }
+
   &-wrap {
     margin: 25px 0;
     display: flex;
@@ -131,9 +132,11 @@ const modalVisible = ref(false)
     position: relative;
     overflow: hidden;
     border: solid 2px rgb(95, 158, 160);
+
     &:hover {
       background: rgb(95 158 160);
       border: solid 2px red;
+
       i {
         opacity: 1;
       }

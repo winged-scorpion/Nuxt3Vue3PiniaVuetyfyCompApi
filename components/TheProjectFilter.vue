@@ -1,9 +1,11 @@
 <script setup lang="ts">
 
-import {projectGetJson} from "~/src/projectGetJson";
 
-const projectList = await projectGetJson();
-let projectListArr = reactive(projectList.projectListArr.flat())
+import {getJsonFunction} from "~/composables/getJson";
+import type {ProjectCompanyList} from "~/model/projectListSlider";
+
+const projectList = await getJsonFunction('project');
+let projectListArr = reactive(<ProjectCompanyList[]>projectList)
 
 const tickLabels = Object.assign({}, projectListArr.map((el) => el.temp))
 const thumbLabels = projectListArr.map((el) => el.name)

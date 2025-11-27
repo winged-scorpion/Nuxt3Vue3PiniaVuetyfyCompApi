@@ -1,8 +1,8 @@
-import { useVariableStore } from "~/store/variableStore";
+import {useVariableStore} from "~/store/variableStore";
 import {getCookies, setCookies} from "~/src/cookiesFunction";
 import {localStoreSet} from "~/src/storageFunction";
 import {useHrStore} from "~/store/HrStore";
-import { localStoreGet } from "~/src/storageFunction";
+import {localStoreGet} from "~/src/storageFunction";
 
 const loadStore = useVariableStore();
 const hrStore = useHrStore();
@@ -12,19 +12,19 @@ export class hrScript {
         hrStore.hrManager = true;
         (async function () {
             const hrNameSave = await localStoreGet('hh');
-            if(hrNameSave) {
+            if (hrNameSave) {
                 hrStore.hrName = hrNameSave;
                 hrStore.hrWelcomeModal = false;
             }
         })();
-        setCookies(60,'hh',true);
+        setCookies(60, 'hh', true);
         navigateTo("/");
         if (getCookies('hh')) {
             hrStore.hrManager = true;
         }
-        setTimeout(()=>{
-            localStoreSet('hh','');
-        },10000)
+        setTimeout(() => {
+            localStoreSet('hh', '');
+        }, 10000)
     }
 }
 

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import {BASE_COLOR, INPUT_TYPE} from "~/src/constant";
 import BaseInput from "~/components/base/BaseInput.vue";
-import {preparationGetJson} from "~/src/preparationGetJson";
+import {getJsonFunction} from "~/composables/getJson";
 import type {Question, QuestionFull} from "~/model/preparation";
 import BaseButton from "~/components/base/BaseButton.vue";
 import {defineAsyncComponent, ref} from "vue";
 
-const baseQuestionList = (await preparationGetJson()).default,
+const baseQuestionList = await getJsonFunction('interview'),
     sortQuestionList = reactive(<QuestionFull[]>[]),
     setListQuestions = reactive(<Question[]>[]),
     itemQuestionArr = reactive(<Question>{}),
