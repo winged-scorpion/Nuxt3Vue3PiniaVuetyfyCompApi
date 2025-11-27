@@ -1,6 +1,6 @@
 import {useUserStore} from "~/store/UserStore";
 import {useVariableStore} from "~/store/variableStore";
-import {localStoreSet} from "~/src/storageFunction";
+import {localStoreSet} from "~/composables/storageFunction";
 import {nameLocalStoreSetUser} from "~/src/constant";
 
 export async function authorizationRequest(login: string, email: string, password: string) {

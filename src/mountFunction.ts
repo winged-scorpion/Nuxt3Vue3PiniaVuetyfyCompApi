@@ -1,7 +1,7 @@
-import {localStoreGet} from "~/src/storageFunction";
+import {localStoreGet} from "~/composables/storageFunction";
 import {useUserStore} from "~/store/UserStore";
 import {hrScript} from "~/src/hrScript";
-import {getCookies} from "~/src/cookiesFunction";
+import {getCookies} from "~/composables/cookiesFunction";
 
 const userStore = useUserStore();
 

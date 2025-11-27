@@ -23,7 +23,6 @@ const
       v-slot="{ errors }"
       :class="{'no-login': userStore.authSend}"
   >
-<!--    <TheLoader/>-->
     <TheLoader/>
     <div
         :class="{'no-login__text': userStore.authSend}"

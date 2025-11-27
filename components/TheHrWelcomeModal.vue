@@ -2,7 +2,7 @@
 import {ref} from "vue";
 import BaseInput from "~/components/base/BaseInput.vue";
 import {useHrStore} from "~/store/HrStore";
-import {localStoreSet} from "~/src/storageFunction";
+import {localStoreSet} from "~/composables/storageFunction";
 
 const hrStore = useHrStore();
 const dialog = ref(true);

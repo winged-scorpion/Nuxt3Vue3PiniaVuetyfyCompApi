@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {definePageMeta} from "#imports";
 import {LogOut} from "~/src/functions";
-import {localStoreDelete} from "~/src/storageFunction";
+import {localStoreDelete} from "~/composables/storageFunction";
 import BaseButton from "~/components/base/BaseButton.vue";
 import {onMounted} from "vue";
 onMounted(() => {
