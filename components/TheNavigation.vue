@@ -9,7 +9,7 @@ import {computed} from "vue";
 const userStore = useUserStore();
 const route = useRoute()
 
-const path = computed(() => route.path)
+
 
 </script>
 <template>
